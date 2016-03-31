@@ -1,8 +1,0 @@
-Commands:
-	gcreate,
-	gdisband,
-	genter,
-	gexit,
-	gblock,
-	ginvite,
-	gaccept,
