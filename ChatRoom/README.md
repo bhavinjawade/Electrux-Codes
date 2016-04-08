@@ -1,4 +1,4 @@
-# Electrux-Codes
+# Chat Room
 
 Requirements:
 SQLite Amalgamation version
@@ -10,7 +10,7 @@ C++11 compliant compiler (made in VS 2015)
 
 
 
-Chat Room. 
+Chat Room.
 You can talk on global chat (default) or use one of the commands (in commands.txt) to create and manage your own groups and talk in them.
 
 Contains 3 parts:
