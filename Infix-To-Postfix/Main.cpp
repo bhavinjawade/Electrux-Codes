@@ -16,9 +16,11 @@ class Converter
 			opstack[i] = '\0';
 		}
 	}
-	void getInfix(std::string __infix)
+	bool getInfix(std::string __infix)
 	{
+		if (__infix.empty()) return false;
 		infix = "(" + __infix + ")";
+		return true;
 	}
 	bool genPostfix()
 	{
@@ -100,7 +102,7 @@ class Converter
 						if (opstack[temptop] == '^' || opstack[temptop] == '/' || opstack[temptop] == '*' || opstack[temptop] == '%' || opstack[temptop] == '+' || opstack[temptop] == '-')
 						{
 							op += opstack[temptop];
-							
+
 							top = temptop - 1;
 						}
 						temptop--;
