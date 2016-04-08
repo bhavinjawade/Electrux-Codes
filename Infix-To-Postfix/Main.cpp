@@ -22,7 +22,7 @@ class Converter
 		infix = "(" + __infix + ")";
 		return true;
 	}
-	bool genPostfix()
+	bool genPostfix() //Precedence is () > ^ > /,%,* > +,-
 	{
 		if (infix.empty()) return false;
 		for (auto it = infix.begin(); it != infix.end(); it++)
