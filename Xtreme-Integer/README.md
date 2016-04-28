@@ -5,6 +5,7 @@ This is the extreme integer library to evaluate huge integers (as long as memory
 It uses unsigned char arry to implement that. (Integer would take 4 bytes and I am storing just one digit per element.)
 
 You can currently:
+
     1. Put a value into the object (of type "xint") using std::string or std::vector array using "=" (assignment) operator.
 
             If any value entered is non integer, assignment will return false.
