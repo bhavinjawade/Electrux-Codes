@@ -7,7 +7,7 @@ It uses unsigned char arry to implement that. (Integer would take 4 bytes and I 
 You can currently:
     1. Put a value into the object (of type "xint") using std::string or std::vector array using "=" (assignment) operator.
 
-        If any value entered is non integer, assignment will return false.
+            If any value entered is non integer, assignment will return false.
 
     2. function - int addnum(int a, int b, int &carry) :-
 
