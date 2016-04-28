@@ -2,6 +2,8 @@
 
 This is the extreme integer library to evaluate huge integers (as long as memory permits).
 
+Factorial is made for example. (You NEED C++11 compatible compiler to compile the code).
+
 It uses unsigned char arry to implement that. (Integer would take 4 bytes and I am storing just one digit per element.)
 
 You can currently:
