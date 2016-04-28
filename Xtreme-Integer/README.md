@@ -69,7 +69,7 @@ You can currently:
 
 
 
-NOTES:
+Notes:
 
     1. Previous points 2, 3, 9, 10, 12, and 13 are used for internal computations. NOT intended for explicit usage.
 
