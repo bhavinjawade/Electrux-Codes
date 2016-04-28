@@ -80,10 +80,10 @@ NOTES:
 
 
 
-    Changelog:
+Changelog:
 
-        28-04-15
+    28-04-15
 
-            Uploaded first version.
+        Uploaded first version.
 
-            Changed some crucial code to increase performance by approximately 20%. (Data duplication).
+        Changed some crucial code to increase performance by approximately 20%. (Data duplication).
