@@ -67,10 +67,6 @@ You can currently:
 
             Convert the character to integer using _atoi() function.
 
-
-
-
-
 Notes:
 
     1. Previous points 2, 3, 9, 10, 12, and 13 are used for internal computations. NOT intended for explicit usage.
@@ -78,11 +74,6 @@ Notes:
     2. This library is not made for heavy usage. It is EXTREMELY slow compared to inbuilt (primitive) datatypes (int, long, etc.).
 
     3. Additions/modifications are welcome but please do tell what has been changed/added.
-
-
-
-
-
 
 Changelog:
 
