@@ -1,7 +1,14 @@
+#define MAX_LINES	400
+#define MAX_LINE	400
+#define MAX_KEY		194
+#define MAX_VAL		194
+#define MAX_NAME	400
+
 typedef struct MyINI_Parser {
 	char name[400];
 	FILE *file;
 } INI_Parser;
+
 
 INI_Parser* ini_open(const char *_file);
 int ini_close(INI_Parser *file);
@@ -45,8 +52,8 @@ int ini_closedelete(INI_Parser *file)
 int ini_set(INI_Parser *file, const char *_key, const char *_val)
 {
 	if(!ini_isopen(file)) return 0;
-	
-	char line[200], key[200][90], val[200][90];
+
+	char line[MAX_LINE], key[MAX_LINES][MAX_KEY], val[MAX_LINES][MAX_KEY];
 	int i = 0, j, found = 0;
 	while(fgets(line, sizeof(line), file->file) != NULL)
 	{
@@ -83,7 +90,7 @@ int ini_get(INI_Parser *file, const char *_key, char *_val)
 {
 	if(!ini_isopen(file)) return 0;
 
-	char line[200], key[90], val[90];
+	char line[MAX_LINE], key[MAX_KEY], val[MAX_VAL];
 	int found = 0;
 	while(fgets(line, sizeof(line), file->file) != NULL)
 	{
@@ -112,7 +119,7 @@ int ini_remove(INI_Parser *file, const char *_key)
 {
 	if(!ini_isopen(file)) return 0;
 
-	char line[200], key[200][90], val[200][90];
+	char line[MAX_LINE], key[MAX_LINES][MAX_KEY], val[MAX_LINES][MAX_KEY];
 	int i = 0, j, found = 0;
 	while(fgets(line, sizeof(line), file->file) != NULL)
 	{
@@ -143,7 +150,7 @@ int ini_disp(INI_Parser *file)
 {
 	if(!ini_isopen(file)) return 0;
 
-	char line[200], key[90], val[90];
+	char line[MAX_LINE], key[MAX_KEY], val[MAX_VAL];
 	int count = 0;
 	while(fgets(line, sizeof(line), file->file) != NULL)
 	{
