@@ -1,4 +1,4 @@
-#define MAX_LINES	400
+#define TOT_LINES	400
 #define MAX_LINE	400
 #define MAX_KEY		194
 #define MAX_VAL		194
@@ -36,6 +36,7 @@ int ini_close(INI_Parser *file)
 	int ret = (fclose(file->file) == 0) ? 1 : 0;
 	file->file = NULL;
 	free(file);
+	file = NULL;
 	return ret;
 }
 
@@ -46,6 +47,7 @@ int ini_closedelete(INI_Parser *file)
 	ret = remove(file->name);
 	file->file = NULL;
 	free(file);
+	file = NULL;
 	return (ret == 0) ? 1 : 0; //Return true if remove is a success
 }
 
@@ -53,7 +55,7 @@ int ini_set(INI_Parser *file, const char *_key, const char *_val)
 {
 	if(!ini_isopen(file)) return 0;
 
-	char line[MAX_LINE], key[MAX_LINES][MAX_KEY], val[MAX_LINES][MAX_KEY];
+	char line[MAX_LINE], key[TOT_LINES][MAX_KEY], val[TOT_LINES][MAX_KEY];
 	int i = 0, j, found = 0;
 	while(fgets(line, sizeof(line), file->file) != NULL)
 	{
@@ -119,7 +121,7 @@ int ini_remove(INI_Parser *file, const char *_key)
 {
 	if(!ini_isopen(file)) return 0;
 
-	char line[MAX_LINE], key[MAX_LINES][MAX_KEY], val[MAX_LINES][MAX_KEY];
+	char line[MAX_LINE], key[TOT_LINES][MAX_KEY], val[TOT_LINES][MAX_KEY];
 	int i = 0, j, found = 0;
 	while(fgets(line, sizeof(line), file->file) != NULL)
 	{
