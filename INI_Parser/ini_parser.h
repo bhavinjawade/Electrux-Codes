@@ -26,8 +26,10 @@ INI_Parser* ini_open(const char *_file)
 	strcpy(file->name, _file);
 	file->file = fopen(_file, "a+");
 	if(file->file == NULL)
+	{
 		free(file);
-	file = NULL;
+		file = NULL;
+	}
 	return file;
 }
 
@@ -43,6 +45,7 @@ int ini_close(INI_Parser *file)
 int ini_closedelete(INI_Parser *file)
 {
 	int ret;
+	if(!ini_isopen(file)) return 0;
 	fclose(file->file);
 	ret = remove(file->name);
 	file->file = NULL;

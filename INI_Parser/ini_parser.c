@@ -5,12 +5,12 @@
 
 int main(int argc, char const *argv[])
 {
-	INI_Parser *newfile = ini_open("my.txt");
+	INI_Parser *newfile = ini_open("my.ini");
 	ini_set(newfile, "testkey", "testval");
 	//ini_get(newfile, "testkey", val);
 	ini_disp(newfile);
-	ini_remove(newfile, "testkey");
-	//ini_close(newfile);
-	ini_closedelete(newfile);
+	//ini_remove(newfile, "testkey");
+	ini_close(newfile);
+	//ini_closedelete(newfile);
 	return 0;
 }
