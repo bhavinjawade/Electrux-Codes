@@ -4,8 +4,6 @@
 #include <pthread.h>
 #include <wchar.h>
 
-unsigned long long count[128] = {}, total = 0;
-
 typedef struct _str {
 	unsigned long long count[128], total;
 } data;
@@ -36,6 +34,7 @@ void *find(void *_file)
 
 int main(int argc, char *argv[])
 {
+	unsigned long long count[128] = {}, total = 0;
 	int tot_files = argc - 1;
 	if(tot_files == 0)
 	{
