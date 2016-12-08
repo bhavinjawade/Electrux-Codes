@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 			}
 			else
 			{
-				flags += (argsit == args.end() - 2) ? *argsit : ( *argsit + " ");
+				flags += (argsit == args.end() - 2) ? *argsit : ( *argsit + " " );
 			}
 			++argsit;
 		}
