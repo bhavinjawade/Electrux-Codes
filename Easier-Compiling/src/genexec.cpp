@@ -4,7 +4,6 @@
 #include <string>
 
 std::vector<std::string> delimitfromargv(int argc, char **argv);
-std::vector<std::string> delimiter(std::string str, char delim);
 
 int main(int argc, char **argv)
 {
@@ -40,16 +39,13 @@ int main(int argc, char **argv)
 			}
 			else
 			{
-				if(argsit == args.end() - 2)
-					flags += *argsit;
-				else
-					flags += *argsit + " ";
+				flags += (argsit == args.end() - 2) ? *argsit : ( *argsit + " ");
 			}
 			++argsit;
 		}
 	}
 	
-	std::string opfile;
+	std::string opfile; //Output file (source file minus extension)
 	for(auto it = file.begin(); it != file.end(); ++it)
 	{
 		if( *it == '.' )
@@ -68,6 +64,7 @@ int main(int argc, char **argv)
 	}
 
 	std::system(finale.c_str());
+
 	return 0;
 }
 
@@ -81,31 +78,6 @@ std::vector<std::string> delimitfromargv(int argc, char **argv)
 	for(int i = 0; i < argc; ++i)
 	{
 		delimstr.push_back(argv[i]);
-	}
-	return delimstr;
-}
-
-std::vector<std::string> delimiter(std::string str, char delim)
-{
-	std::vector<std::string> delimstr;
-	delimstr.clear();
-	
-	if(str.empty()) return delimstr;
-
-	std::string temp;
-	temp.clear();
-
-	for(auto it = str.begin(); it != str.end(); ++it)
-	{
-		if( *it == delim || it == str.end() - 1 )
-		{
-			delimstr.push_back(temp);
-			temp.clear();
-		}
-		else
-		{
-			temp += *it;
-		}
 	}
 	return delimstr;
 }
