@@ -4,38 +4,35 @@
 #include <string>
 
 std::vector<std::string> delimitfromargv(int argc, char **argv);
+void getnameextfromfile(std::string file, std::string &name, std::string &ext);
 
 int main(int argc, char **argv)
 {
-	if(argc <= 2)
+	if(argc <= 1)
 	{
-		std::cout << "USAGE: " << argv[0] << " <c/cxx> <flags...> <file>\n";
+		std::cout << "USAGE: " << argv[0] << " <flags...> <file>\n";
 		return 0;
 	}
 
 	std::vector<std::string> args = delimitfromargv(argc, argv);
 
 	auto argsit = args.begin(); //Starting from the program name parameter
-	++argsit; //Now at the type parameter
-
-	std::string type = *argsit;
 	++argsit; //Now at file (if 2 params) / flag(s) (if >= 3 params)
 
-	std::string flags;
-	std::string file;
+	std::string type, flags, file;
 
-	if(argc == 3)
+	if(argc == 2)
 	{
-		std::string file = *argsit;
+		file = *argsit;
 	}
 	else
 	{
-
 		while(argsit != args.end())
 		{
 			if(argsit == args.end() - 1)
 			{
 				file = *argsit;
+				
 			}
 			else
 			{
@@ -46,12 +43,8 @@ int main(int argc, char **argv)
 	}
 	
 	std::string opfile; //Output file (source file minus extension)
-	for(auto it = file.begin(); it != file.end(); ++it)
-	{
-		if( *it == '.' )
-			break;
-		opfile += *it;
-	}
+	
+	getnameextfromfile(file, opfile, type);
 	
 	std::string finale;
 	if(type == "c" || type == "C")
@@ -80,4 +73,30 @@ std::vector<std::string> delimitfromargv(int argc, char **argv)
 		delimstr.push_back(argv[i]);
 	}
 	return delimstr;
+}
+
+void getnameextfromfile(std::string file, std::string &name, std::string &ext)
+{
+	std::string::iterator pos;
+
+	name.clear();
+	ext.clear();
+
+	for(auto it = file.begin(); it != file.end(); ++it)
+	{
+		if( *it == '.' && it != file.end() - 1)
+		{
+			pos = it;
+		}
+	}
+
+	for(auto it = file.begin(); it != pos; ++it)
+	{
+		name += *it;
+	}
+
+	for(pos = pos + 1; pos != file.end(); ++pos) //Increment first so that it dont count period.
+	{
+		ext += *pos;
+	}
 }

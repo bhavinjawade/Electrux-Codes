@@ -13,3 +13,7 @@ Currently contains:
 			To cleave a string using a character as delimiter.
 		
 				std::vector<std::string> delimiter(std::string str, char delim);
+			
+			To bifurcate file into its name and extension.
+			
+				void getnameextfromfile(std::string file, std::string &name, std::string &ext);
