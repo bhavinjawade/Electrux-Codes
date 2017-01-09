@@ -12,7 +12,7 @@
 int main()
 {
 	bs_tree<int> tree;
-	/*tree.insert_data(5);
+	tree.insert_data(5);
 	tree.insert_data(3);
 	tree.insert_data(2);
 	tree.insert_data(16);
@@ -25,8 +25,8 @@ int main()
 	tree.insert_data(11);
 	tree.insert_data(1);
 	tree.insert_data(1231);
-	tree.delete_data(345);*/
-	tree.insert_data(65);
+	tree.delete_data(345);
+	/*tree.insert_data(65);
 	tree.insert_data(67);
 	tree.insert_data(69);
 	tree.insert_data(50);
@@ -37,7 +37,7 @@ int main()
 	tree.insert_data(47);
 	tree.insert_data(49);
 	tree.insert_data(48);
-	tree.insert_data(46);
+	tree.insert_data(46);*/
 	std::cout << "Level: " << tree.get_level() << "\n\n";
 	tree.display_tree(bs_tree<int>::TRAVERSAL::VLR);
 	std::cout << "\n\n";

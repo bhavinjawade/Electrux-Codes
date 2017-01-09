@@ -34,6 +34,7 @@ public:
 
 	bool insert_data(T data);
 
+
 	bool delete_data(T data);
 
 	bintree<T> *get_inorder_successor(bintree<T> *node);
@@ -351,5 +352,5 @@ template <class T> void bs_tree<T>::display_tree(bintree<T> *temp, int trav_type
 
 template <class T> size_t bs_tree<T>::get_level()
 {
-	return levelmap.size();
+	return levelmap.size() - 1; // - 1 because the size does not count from zero.
 }
