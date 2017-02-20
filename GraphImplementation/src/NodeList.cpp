@@ -4,14 +4,16 @@ namespace Electrux
 {
 	NodeList::NodeList()
 	{
-		start = end = NULL;
+		start = end = nullptr;
 		node = -1;
+		next = prev = nullptr;
 	}
 
 	NodeList::NodeList(int _node)
 	{
-		start = end = NULL;
+		start = end = nullptr;
 		node = _node;
+		next = prev = nullptr;
 	}
 
 	void NodeList::setNext(NodeList *ne)
@@ -49,19 +51,19 @@ namespace Electrux
 	{
 		if (!edge_exists(to_id))
 		{
-			if (start == NULL)
+			if (start == nullptr)
 			{
 				start = end = new Node;
 				start->id = to_id;
 				start->weight = weight;
-				start->next = NULL;
-				start->prev = NULL;
+				start->next = nullptr;
+				start->prev = nullptr;
 			}
 			else
 			{
 				end->next = new Node;
 				end->next->prev = end;
-				end->next->next = NULL;
+				end->next->next = nullptr;
 				end = end->next;
 				end->id = to_id;
 				end->weight = weight;
@@ -71,7 +73,7 @@ namespace Electrux
 	int NodeList::edge_exists(int to_id)
 	{
 		Node *it = start;
-		while (it != NULL)
+		while (it != nullptr)
 		{
 			if (it->id == to_id)
 				return it->weight;
@@ -84,19 +86,19 @@ namespace Electrux
 		if (edge_exists(to_id))
 		{
 			Node *it = start;
-			while (it != NULL)
+			while (it != nullptr)
 			{
 				if (it->id == to_id)
 				{
 					if (it == start)
 					{
 						start = start->next;
-						start->prev = NULL;
+						start->prev = nullptr;
 					}
 					else if (it == end)
 					{
 						end = it->prev;
-						it->prev->next = NULL;
+						it->prev->next = nullptr;
 					}
 					else
 					{
@@ -114,7 +116,7 @@ namespace Electrux
 	std::ostream & operator <<(std::ostream &os, const NodeList &obj)
 	{
 		Node *temp = obj.start;
-		while (temp != NULL)
+		while (temp != nullptr)
 		{
 			os << "Destination: " << temp->id << "\tWeight: " << temp->weight << "\n";
 			temp = temp->next;

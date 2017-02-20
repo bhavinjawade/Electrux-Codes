@@ -4,13 +4,13 @@ namespace Electrux
 {
 	Graph::Graph()
 	{
-		start = end = NULL;
+		start = end = nullptr;
 		directed = Direction::DIRECTED;
 	}
 
 	Graph::Graph(int direction)
 	{
-		start = end = NULL;
+		start = end = nullptr;
 		if (direction != Direction::DIRECTED && direction != Direction::NONDIRECTED)
 			directed = Direction::DIRECTED;
 		else directed = direction;
@@ -19,13 +19,13 @@ namespace Electrux
 	bool Graph::add_node(int id)
 	{
 		NodeList *base;
-		if ((base = GetNodeList(id)) != NULL)
+		if ((base = GetNodeList(id)) != nullptr)
 		{
 			return false;
 		}
 		else
 		{
-			if (start == NULL)
+			if (start == nullptr)
 			{
 				start = end = new NodeList;
 				start->set_node(id);
@@ -34,7 +34,7 @@ namespace Electrux
 			{
 				end->setNext(new NodeList);
 				end->getNext()->setPrev(end);
-				end->getNext()->setNext(NULL);
+				end->getNext()->setNext(nullptr);
 				end = end->getNext();
 				end->set_node(id);
 			}
@@ -47,12 +47,12 @@ namespace Electrux
 	bool Graph::delete_node(int id)
 	{
 		NodeList *it = start;
-		while (it != NULL)
+		while (it != nullptr)
 		{
 			if (it->get_node() == id)
 			{
 				Node *deleter = it->getStart();							//
-				while (deleter != NULL)									//
+				while (deleter != nullptr)									//
 				{														//
 					NodeList *deletion = GetNodeList(deleter->id);		//Handle the deletion of this node from all other nodes
 					deletion->delete_edge(it->get_node());				//
@@ -61,12 +61,12 @@ namespace Electrux
 				if (it == start)
 				{
 					start = start->getNext();
-					start->setPrev(NULL);
+					start->setPrev(nullptr);
 				}
 				else if (it == end)
 				{
 					end = it->getPrev();
-					it->getPrev()->setNext(NULL);
+					it->getPrev()->setNext(nullptr);
 				}
 				else
 				{
@@ -84,7 +84,7 @@ namespace Electrux
 	bool Graph::add_edge(int srcnode, int destnode, int weight)
 	{
 		NodeList *src = GetNodeList(srcnode), *dest = GetNodeList(destnode);
-		if (src == NULL || dest == NULL) return false;
+		if (src == nullptr || dest == nullptr) return false;
 		if (directed == Direction::DIRECTED)
 		{
 			src->add_edge(destnode, weight);
@@ -100,7 +100,7 @@ namespace Electrux
 	bool Graph::delete_edge(int from, int to)
 	{
 		NodeList *node1 = GetNodeList(from), *node2 = GetNodeList(to);
-		if (node1 == NULL || node2 == NULL) return false;
+		if (node1 == nullptr || node2 == nullptr) return false;
 		if (directed == Direction::DIRECTED)
 		{
 			node1->delete_edge(to);
@@ -116,7 +116,7 @@ namespace Electrux
 	NodeList* Graph::GetNodeList(int _base)
 	{
 		NodeList *temp = start;
-		while (temp != NULL)
+		while (temp != nullptr)
 		{
 			if (temp->get_node() == _base)
 			{
@@ -124,13 +124,13 @@ namespace Electrux
 			}
 			temp = temp->getNext();
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	bool Graph::NodeListExists(int _base)
 	{
 		NodeList *temp = start;
-		while (temp != NULL)
+		while (temp != nullptr)
 		{
 			if (temp->get_node() == _base)
 			{
@@ -155,7 +155,7 @@ namespace Electrux
 		NodeList *temp = start;
 		std::vector<int> allnodes;
 		allnodes.clear();
-		while (temp != NULL)
+		while (temp != nullptr)
 		{
 			allnodes.push_back(temp->get_node());
 			temp = temp->getNext();
@@ -232,10 +232,10 @@ namespace Electrux
 	std::ostream & operator << (std::ostream &os, const Graph &graph)
 	{
 		NodeList *temp = graph.start;
-		while (temp != NULL)
+		while (temp != nullptr)
 		{
 			os << "\nNode: " << temp->get_node() << "\n";
-			if (temp->getStart() == NULL)
+			if (temp->getStart() == nullptr)
 			{
 				os << "----No outgoing edge available----\n";
 			}
