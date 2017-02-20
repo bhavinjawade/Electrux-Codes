@@ -1,10 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define MAX 10
+
 int main()
 {
     system("cls");
-    int arr[10] = {10,20,30,40,50,60,70,80,90,100}, lb = 0, ub = (10-1), beg = lb, end = ub, mid = (beg+end)/2, data, pos = -1;
+    int arr[MAX] = {10,20,30,40,50,60,70,80,90,100},
+		beg = 0,
+		end = MAX - 1,
+		mid = (beg+end)/2,
+		data, pos = -1;
 
     printf("Enter what to search: ");
     scanf("%d", &data);
