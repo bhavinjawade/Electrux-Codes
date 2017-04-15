@@ -11,7 +11,7 @@ namespace Electrux
 	Graph::Graph(int direction)
 	{
 		start = end = nullptr;
-		if (direction != Direction::DIRECTED && direction != Direction::NONDIRECTED)
+		if (direction != Direction::DIRECTED && direction != Direction::UNDIRECTED)
 			directed = Direction::DIRECTED;
 		else directed = direction;
 	}
@@ -52,7 +52,7 @@ namespace Electrux
 			if (it->get_node() == id)
 			{
 				Node *deleter = it->getStart();							//
-				while (deleter != nullptr)									//
+				while (deleter != nullptr)								//
 				{														//
 					NodeList *deletion = GetNodeList(deleter->id);		//Handle the deletion of this node from all other nodes
 					deletion->delete_edge(it->get_node());				//
@@ -81,6 +81,15 @@ namespace Electrux
 		return false;
 	}
 
+	void Graph::disp_node_tree(std::vector<int> vec)
+	{
+		for (auto it = vec.begin(); it != vec.end(); ++it)
+		{
+			std::cout << *it << "->";
+		}
+		std::cout << "X\n";
+	}
+
 	bool Graph::add_edge(int srcnode, int destnode, int weight)
 	{
 		NodeList *src = GetNodeList(srcnode), *dest = GetNodeList(destnode);
@@ -89,7 +98,7 @@ namespace Electrux
 		{
 			src->add_edge(destnode, weight);
 		}
-		else if (directed == Direction::NONDIRECTED)
+		else if (directed == Direction::UNDIRECTED)
 		{
 			src->add_edge(destnode, weight);
 			dest->add_edge(srcnode, weight);
@@ -105,7 +114,7 @@ namespace Electrux
 		{
 			node1->delete_edge(to);
 		}
-		else if (directed == Direction::NONDIRECTED)
+		else if (directed == Direction::UNDIRECTED)
 		{
 			node1->delete_edge(to);
 			node2->delete_edge(from);
@@ -141,6 +150,7 @@ namespace Electrux
 		delete temp;
 		return false;
 	}
+
 	int Graph::edge_exists(int from, int to)
 	{
 		NodeList *fromnode = GetNodeList(from);
@@ -150,6 +160,7 @@ namespace Electrux
 		if (dist != 0) return dist;
 		return 0;
 	}
+
 	std::vector<int> Graph::getNodes()
 	{
 		NodeList *temp = start;
@@ -162,6 +173,7 @@ namespace Electrux
 		}
 		return allnodes;
 	}
+
 	std::map<int, int> Graph::getShortestDistances(int src, int dest)
 	{
 		std::map<int, int> dist;
@@ -200,6 +212,76 @@ namespace Electrux
 		}
 		return dist;
 	}
+
+	ShortestPathData Graph::CustomGetShortestPath(int src, int dest, std::vector<int> &path, int dist)
+	{
+		if (std::find(path.begin(), path.end(), src) != path.end()) return { -1, path }; //Prevent Cycle lock in graph
+
+		path.push_back(src);
+		NodeList *srclist = GetNodeList(src);
+
+		//std::cout << "New node: " << src << " with dist = " << dist << "\n";
+		//disp_node_tree(path);
+		//std::cout << "\n";
+		//std::cout << "New node end\n\n";
+		ShortestPathData data = { -1, path };
+
+		std::vector<int> origpath = path;
+
+		if (srclist->get_node() == dest)
+		{
+			//std::cout << "final data new = " << dist << " with path = ";
+			//disp_node_tree(path);
+			//std::cout << "\nExiting: " << src << "\n";
+			//std::cout << "\n\n";
+			data.dist = dist;
+			data.path = path;
+
+			return data;
+		}
+
+		Node *it = srclist->getStart();
+		if (it == nullptr)
+		{
+			//std::cout << "No path available on node " << src << ". Returning";
+			//disp_node_tree(data.path);
+			//std::cout << " and dist: " << data.dist << "\n";
+			return data;
+		}
+		data.dist = 0;
+
+		ShortestPathData newdata;
+		int found = 0;
+
+		while (it != nullptr)
+		{
+			if ((newdata = CustomGetShortestPath(it->id, dest, path, dist + it->weight)).dist > 0)
+			{
+				//std::cout << "Received new data: " << newdata.dist << ", prevdata: " << data.dist << "\n";
+				if (data.dist > newdata.dist || data.dist == 0)
+				{
+					std::cout << "Possible Path found... dist = " << newdata.dist << " with path = ";
+					disp_node_tree(newdata.path);
+					std::cout << "\n\n";
+					data = newdata;
+				}
+				found++;
+			}
+			path = origpath;
+			it = it->next;
+		}
+
+		//std::cout << "Exiting: " << src << " with Found: " << found << " and data.dist = " << data.dist << "\n\n\n";
+
+		if (found <= 0)
+		{
+			data = { -1, path };
+		}
+
+		return data;
+
+	}
+
 	void Graph::arrangeVisits(std::vector<mnode> &vec)
 	{
 		std::vector<mnode> vtemp;
@@ -218,6 +300,7 @@ namespace Electrux
 		}
 		vec = vtemp;
 	}
+
 	bool Graph::findInVector(std::vector<mnode> &vec, int id)
 	{
 		for (auto it = vec.begin(); it != vec.end(); ++it)
@@ -229,6 +312,7 @@ namespace Electrux
 		}
 		return false;
 	}
+
 	std::ostream & operator << (std::ostream &os, const Graph &graph)
 	{
 		NodeList *temp = graph.start;

@@ -35,18 +35,22 @@ namespace Electrux
 	{
 		return prev;
 	}
+
 	Node* NodeList::getStart()
 	{
 		return start;
 	}
+	
 	void NodeList::set_node(int n)
 	{
 		node = n;
 	}
+	
 	int NodeList::get_node()
 	{
 		return node;
 	}
+	
 	void NodeList::add_edge(int to_id, int weight)
 	{
 		if (!edge_exists(to_id))
@@ -70,6 +74,7 @@ namespace Electrux
 			}
 		}
 	}
+	
 	int NodeList::edge_exists(int to_id)
 	{
 		Node *it = start;
@@ -81,6 +86,7 @@ namespace Electrux
 		}
 		return 0;
 	}
+	
 	bool NodeList::delete_edge(int to_id)
 	{
 		if (edge_exists(to_id))
@@ -113,6 +119,7 @@ namespace Electrux
 		}
 		return false;
 	}
+
 	std::ostream & operator <<(std::ostream &os, const NodeList &obj)
 	{
 		Node *temp = obj.start;
