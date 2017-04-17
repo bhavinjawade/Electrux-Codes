@@ -1,99 +1,101 @@
 #pragma once
 
 //Manages each section and holds its data. (Next and Previous pointers used to point to next and previous sections.
-
-class SectionData
+namespace Electrux
 {
-	std::string section;
-	std::map<std::string, std::string> data;
-
-	SectionData *prev, *next;
-
-public:
-
-	SectionData()
+	class SectionData
 	{
-		this->prev = this->next = nullptr;
-	}
+		std::string section;
+		std::map<std::string, std::string> data;
 
-	~SectionData()
-	{
-		this->section.clear();
-		this->data.clear();
-	}
+		SectionData *prev, *next;
 
-	void SetSection(std::string sec)
-	{
-		this->section = sec;
-	}
+	public:
 
-	std::string GetSection()
-	{
-		return this->section;
-	}
-
-	void InsertData(std::string key, std::string val)
-	{
-		data[key] = val;
-	}
-
-	bool DeleteData(std::string key)
-	{
-		if (data.find(key) == data.end()) return false;
-
-		data.erase(key);
-
-		return true;
-	}
-
-	std::string GetData(std::string key)
-	{
-		std::string temp;
-
-		if (data.find(key) == data.end()) return temp;
-
-		return data[key];
-	}
-
-	void Clear()
-	{
-		section.clear();
-		data.clear();
-	}
-
-	void SetNext(SectionData *dat)
-	{
-		if (dat != nullptr)
+		SectionData()
 		{
-			dat->prev = this;
+			this->prev = this->next = nullptr;
 		}
 
-		this->next = dat;
-	}
-
-	void SetPrev(SectionData *dat)
-	{
-		if (dat != nullptr)
+		~SectionData()
 		{
-			dat->next = this;
+			this->section.clear();
+			this->data.clear();
 		}
 
-		this->prev = dat;
-	}
+		void SetSection(std::string sec)
+		{
+			this->section = sec;
+		}
 
-	std::map<std::string, std::string> &GetAllData()
-	{
-		return data;
-	}
+		std::string GetSection()
+		{
+			return this->section;
+		}
 
-	SectionData *GetPrev()
-	{
-		return prev;
-	}
+		void InsertData(std::string key, std::string val)
+		{
+			data[key] = val;
+		}
 
-	SectionData *GetNext()
-	{
-		return next;
-	}
+		bool DeleteData(std::string key)
+		{
+			if (data.find(key) == data.end()) return false;
 
-};
+			data.erase(key);
+
+			return true;
+		}
+
+		std::string GetData(std::string key)
+		{
+			std::string temp;
+
+			if (data.find(key) == data.end()) return temp;
+
+			return data[key];
+		}
+
+		void Clear()
+		{
+			section.clear();
+			data.clear();
+		}
+
+		void SetNext(SectionData *dat)
+		{
+			if (dat != nullptr)
+			{
+				dat->prev = this;
+			}
+
+			this->next = dat;
+		}
+
+		void SetPrev(SectionData *dat)
+		{
+			if (dat != nullptr)
+			{
+				dat->next = this;
+			}
+
+			this->prev = dat;
+		}
+
+		std::map<std::string, std::string> &GetAllData()
+		{
+			return data;
+		}
+
+		SectionData *GetPrev()
+		{
+			return prev;
+		}
+
+		SectionData *GetNext()
+		{
+			return next;
+		}
+
+	};
+}

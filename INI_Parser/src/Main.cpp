@@ -7,7 +7,7 @@ int main()
 {
 	std::system("cls");
 
-	INI_Parser ini;
+	Electrux::INI_Parser ini;
 	/*
 	ini.SetData("Test", "OneS", "One");
 	ini.SetData("Test", "OneI", 1);

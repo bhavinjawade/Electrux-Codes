@@ -15,3 +15,5 @@ As far as working goes, you can parse the INI data from a file and then modify/a
 
 Finally, to save the data, pass it through the SaveFile function.
 Also, you can use the DisplayAll function to show all the content present in the INI object. (Parsed from file or self generated.)
+
+The INI_Parser is in "Electrux" namespace.
