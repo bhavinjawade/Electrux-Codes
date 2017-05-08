@@ -1,0 +1,51 @@
+#pragma once
+
+
+enum ConsoleInputCodes
+{
+	SAVEALL,
+	ALLGOOD,
+	EXIT
+};
+
+enum MsgCode
+{
+	SERVER,
+	CONSOLEINPUT,
+	ERROR,
+	NETWORK,
+	INIDB,
+	INIMGR
+};
+
+enum PacketType
+{
+	SUCCESS,
+	CONNECT,
+	ALREADYCONNECTED,
+	INIACCESS,
+	FAILED,
+	INVALID
+};
+
+enum INIAccessType
+{
+	FETCH,
+	INSERT,
+	DELETE,
+	FINALIZE,
+	LOAD,
+	LOADFAILED,
+	LOADPASSED,
+	UNDEFINED
+};
+
+enum DataType
+{
+	STRING,
+	INT,
+	FLOAT,
+	SUCCESSDATA,
+	FAILEDDATA,
+	INVALIDDATA
+};
