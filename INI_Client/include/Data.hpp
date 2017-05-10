@@ -2,8 +2,5 @@
 
 
 const int SERVER_PORT = 8080;
-const int MAX_PACKET_TRIES = 100000;
+const int MAX_PACKET_TRIES = 1000;
 
-
-std::string username,
-			db;

@@ -1,5 +1,8 @@
 #include <iostream>
-#include <cstdlib>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <map>
 #include "INI_Parser.hpp"
 
 
@@ -9,18 +12,18 @@ int main()
 
 	Electrux::INI_Parser ini;
 	/*
-	ini.SetData("Test", "OneS", "One");
-	ini.SetData("Test", "OneI", 1);
-	ini.SetData("Test", "OneF", 1.0f);
+	ini.SetData("Yo", "OneS", "One");
+	ini.SetData("Yo", "OneI", 1);
+	ini.SetData("Yo", "OneF", 1.0f);
 
 	ini.SaveFile("Test.ini");
 	*/
 
-	ini.ParseFile("Test.ini");
+	ini.ParseFile("UserOptions.ini");
 
 	ini.DisplayAll();
 
-	//ini.SetData("Test", "OneS", "Two"); //Modifies already existing data.
+	//ini.SetData("Yo", "OneS", "Two"); //Modifies already existing data.
 
 	//ini.DisplayAll();
 

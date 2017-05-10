@@ -5,6 +5,7 @@ class INIManager
 {
 	std::map<std::string, Electrux::INI_Parser*> inifiles;
 
+
 public:
 
 	//Load a file in the INI Parser.
@@ -98,24 +99,24 @@ public:
 	}
 
 	//Saves the file given in parameter.
-	bool SaveFile(std::string file)
+	int SaveFile(std::string file)
 	{
-		if (!IsFileLoaded(file)) return false;
+		if (!IsFileLoaded(file)) return -1;
 
-		//Save the file in default location and filename.
-		inifiles[file]->SaveFile(DEFAULT_DB_DIR + file + EXTENSION);
-
-		return true;
+		//Save the file in default location and filename. Returns true if file was saved, false if there was no content to save or file could not be opened.
+		return inifiles[file]->SaveFile(DEFAULT_DB_DIR + file + EXTENSION);
 	}
 
 	//Closes the open file given in parameter and deallocates the respective pointer. Does NOT save it!!!
 	bool CloseFile(std::string file)
 	{
+		if (file.empty()) return false;
+
 		if (!IsFileLoaded(file)) return false;
 
 		//Deallocate the pointer.
 		delete inifiles[file];
-
+		
 		//Find the location iterator of the file in the map and erase it.
 		inifiles.erase(inifiles.find(file));
 

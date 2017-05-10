@@ -64,6 +64,7 @@ public:
 		//Yaay! a new user connected! Let's add it :D
 		if (listener.accept(*user) == sf::Socket::Done)
 		{
+			std::cout << "\n";
 			Logger::Log(MsgCode::NETWORK, "A user connected successfully. Finalizing the connection...");
 
 			//Add client on a separate thread.
@@ -109,6 +110,7 @@ public:
 
 			count++;
 		}
+
 	}
 
 	//Handles the packets received by the server from clients.
@@ -132,173 +134,247 @@ public:
 
 			accesstype = GetINIAccessType(temp);
 
-			if (accesstype == INIAccessType::DELETE || accesstype == INIAccessType::FETCH || accesstype == INIAccessType::FINALIZE || accesstype == INIAccessType::INSERT)
+
+			if (accesstype != INIAccessType::LOAD && !user->IsDBConnected())
 			{
-				if (!user->IsDBConnected())
-				{
-					packet.clear();
+				packet.clear();
 
-					packet << PacketType::FAILED << std::string("You must first connect to a database!");
+				packet << PacketType::INIACCESS << INIAccessType::UNDEFINED;
 
-					Logger::Log(MsgCode::INIDB, "User: " + user->GetName() + " tried to perform action on databse but is not connected to any database!!");
+				Logger::Log(MsgCode::INIDB, "User: " + user->GetName() + " tried to perform some action on a databse but is not connected to any database!!");
 
-					SendPacket(user, packet);
-					
-					return false;
-				}
+				SendPacket(user, packet);
+
+				return false;
 			}
 			
-			if (accesstype == INIAccessType::LOAD)
+			else if ((accesstype == INIAccessType::DELETE || accesstype == INIAccessType::FETCH) && user->IsDBNew())
 			{
-				std::string file;
-
-				packet >> file;
-
-				Logger::Log(MsgCode::INIDB, "User: " + user->GetName() + " requested action [load] on file: " + file);
+				Logger::Log(MsgCode::INIDB, "User: " + user->GetName() + " requested to delete/fetch from a nonexisting database!");
 
 				packet.clear();
 
-				if (!inimgr->LoadFile(file))
+				packet << PacketType::INIACCESS << INIAccessType::NEWINI;
+
+				SendPacket(user, packet);
+			}
+			
+			else
+			{
+				if (accesstype == INIAccessType::LOAD)
 				{
-					packet << PacketType::INIACCESS << INIAccessType::LOADFAILED;
-				}
-				else
-				{
-					packet << PacketType::INIACCESS << INIAccessType::LOADPASSED;
+					std::string file;
+
+					packet >> file;
+
+					Logger::Log(MsgCode::INIDB, "User: " + user->GetName() + " requested action [load] on file: " + file);
+
+					packet.clear();
+
+					if (user->IsDBConnected())
+					{
+						Logger::Log(MsgCode::INIDB, "User: " + user->GetName() + " requested to change DB from " + user->GetDBConnected() + " to " + file);
+
+						inimgr->CloseFile(user->GetDBConnected());
+					}
+
+					if (!inimgr->LoadFile(file))
+					{
+						packet << PacketType::INIACCESS << INIAccessType::NEWINI;
+						user->SetNewDB(true);
+					}
+					else
+					{
+						packet << PacketType::INIACCESS << INIAccessType::LOADPASSED;
+						user->SetNewDB(false);
+					}
+
 					user->SetDBConnected(file);
+					SendPacket(user, packet);
 				}
 
-				SendPacket(user, packet);
-			}
-
-			else if (accesstype == INIAccessType::FETCH)
-			{
-				std::string section, key;
-
-				int datatype;
-
-				packet >> section >> key >> datatype;
-
-				Logger::Log(MsgCode::INIDB, "User: " + user->GetName() + " requested action [fetch] at section: " + section + " on key: " + key);
-
-				packet.clear();
-
-				packet << PacketType::INIACCESS;
-
-				if (datatype == DataType::STRING)
+				else if (accesstype == INIAccessType::FETCH)
 				{
-					packet << DataType::SUCCESSDATA << inimgr->GetDataString(user->GetDBConnected(), section, key);
-				}
-				else if (datatype == DataType::INT)
-				{
-					packet << DataType::SUCCESSDATA << inimgr->GetDataInt(user->GetDBConnected(), section, key);
-				}
-				else if (datatype == DataType::FLOAT)
-				{
-					packet << DataType::SUCCESSDATA << inimgr->GetDataFloat(user->GetDBConnected(), section, key);
-				}
-				else packet << DataType::INVALIDDATA;
+					std::string section, key;
 
-				SendPacket(user, packet);
-			}
+					int datatype;
 
-			else if (accesstype == INIAccessType::DELETE)
-			{
-				std::string section, key;
+					packet >> section >> key >> datatype;
 
-				packet >> section >> key;
-
-				Logger::Log(MsgCode::INIDB, "User: " + user->GetName() + " requested action [delete] at section: " + section + " on key: " + key);
-
-				packet.clear();
-				
-				packet << PacketType::INIACCESS;
-
-				if (inimgr->DeleteData(user->GetDBConnected(), section, key))
-					packet << DataType::SUCCESSDATA;
-				else
-					packet << DataType::FAILEDDATA;
-
-				SendPacket(user, packet);
-			}
-
-			else if (accesstype == INIAccessType::FINALIZE)
-			{
-				packet.clear();
-
-				packet << PacketType::INIACCESS;
-
-				Logger::Log(MsgCode::INIDB, "User: " + user->GetName() + " requested action [finalize] on database: " + user->GetDBConnected());
-
-				if (inimgr->SaveFile(user->GetDBConnected()))
-					packet << DataType::SUCCESSDATA;
-				else
-					packet << DataType::FAILEDDATA;
-
-				SendPacket(user, packet);
-			}
-
-			else if (accesstype == INIAccessType::INSERT)
-			{
-				std::string section, key;
-
-				int datatype;
-
-				packet >> section >> key >> datatype;
-
-				Logger::Log(MsgCode::INIDB, "User: " + user->GetName() + " requested action [insert] at section: " + section + " on key: " + key);
-
-				if (datatype == DataType::STRING)
-				{
-					std::string val;
-					packet >> val;
+					Logger::Log(MsgCode::INIDB, "User: " + user->GetName() + " requested action [fetch] at section: " + section + " on key: " + key);
 
 					packet.clear();
 
 					packet << PacketType::INIACCESS;
 
-					if (inimgr->UpdateDataString(user->GetDBConnected(), section, key, val))
-						packet << DataType::SUCCESSDATA;
-					else
-						packet << DataType::FAILEDDATA;
+					if (datatype == DataType::STRING)
+					{
+						std::string data = inimgr->GetDataString(user->GetDBConnected(), section, key);
+
+						if (data.empty())
+							packet << DataType::FAILEDDATA;
+						else
+							packet << DataType::SUCCESSDATA << data;
+					}
+					
+					else if (datatype == DataType::INT)
+					{
+						int data = inimgr->GetDataInt(user->GetDBConnected(), section, key);
+
+						if (data == INT_MIN)
+							packet << DataType::FAILEDDATA;
+						else
+							packet << DataType::SUCCESSDATA << data;
+
+					}
+					
+					else if (datatype == DataType::FLOAT)
+					{
+						float data = inimgr->GetDataFloat(user->GetDBConnected(), section, key);
+
+						if (data == FLT_MIN)
+							packet << DataType::FAILEDDATA;
+						else
+							packet << DataType::SUCCESSDATA << data;
+					}
+					
+					else packet << DataType::INVALIDDATA;
+
+					SendPacket(user, packet);
 				}
-				else if (datatype == DataType::INT)
+
+				else if (accesstype == INIAccessType::DELETE)
 				{
-					int val;
-					packet >> val;
+					std::string section, key;
+
+					packet >> section >> key;
+
+					Logger::Log(MsgCode::INIDB, "User: " + user->GetName() + " requested action [delete] at section: " + section + " on key: " + key);
 
 					packet.clear();
 
 					packet << PacketType::INIACCESS;
 
-					if (inimgr->UpdateDataInt(user->GetDBConnected(), section, key, val))
+					bool done = inimgr->DeleteData(user->GetDBConnected(), section, key);
+					
+					if (done)
 						packet << DataType::SUCCESSDATA;
 					else
 						packet << DataType::FAILEDDATA;
-				}
-				else if (datatype == DataType::FLOAT)
-				{
-					float val;
-					packet >> val;
 
+					SendPacket(user, packet);
+				}
+
+				else if (accesstype == INIAccessType::FINALIZE)
+				{
 					packet.clear();
 
 					packet << PacketType::INIACCESS;
 
-					if (inimgr->UpdateDataFloat(user->GetDBConnected(), section, key, val))
-						packet << DataType::SUCCESSDATA;
-					else
-						packet << DataType::FAILEDDATA;
-				}
-				else
-				{
-					packet.clear();
-					packet << PacketType::INIACCESS << DataType::FAILEDDATA;
+					Logger::Log(MsgCode::INIDB, "User: " + user->GetName() + " requested action [finalize] on database: " + user->GetDBConnected());
+
+					int ret = inimgr->SaveFile(user->GetDBConnected());
+
+					//All good
+					if ((bool)ret == true)
+					{
+						packet << INIAccessType::FINALIZE;
+						user->SetNewDB(false);
+					}
+					//There is nothing to save! (Empty file contents.)
+					else if((bool)ret == false)
+					{
+						packet << INIAccessType::FINALIZEFAILEDNODATA;
+						user->SetNewDB(true);
+					}
+					//The file is not open
+					else if (ret == -1)
+					{
+						packet << INIAccessType::FINALIZEFAILED;
+						user->SetNewDB(true);
+					}
+
+					SendPacket(user, packet);
 				}
 
-				SendPacket(user, packet);
+				else if (accesstype == INIAccessType::INSERT)
+				{
+					std::string section, key;
+
+					int datatype;
+
+					packet >> section >> key >> datatype;
+
+					Logger::Log(MsgCode::INIDB, "User: " + user->GetName() + " requested action [insert] at section: " + section + " on key: " + key);
+
+					if (datatype == DataType::STRING)
+					{
+						std::string val;
+						packet >> val;
+
+						packet.clear();
+
+						packet << PacketType::INIACCESS;
+
+						bool done = inimgr->UpdateDataString(user->GetDBConnected(), section, key, val);
+
+						if (done)
+							packet << DataType::SUCCESSDATA;
+						else
+							packet << DataType::FAILEDDATA;
+					}
+					
+					else if (datatype == DataType::INT)
+					{
+						int val;
+						packet >> val;
+
+						packet.clear();
+
+						packet << PacketType::INIACCESS;
+						
+						bool done = inimgr->UpdateDataInt(user->GetDBConnected(), section, key, val);
+
+						if (done)
+							packet << DataType::SUCCESSDATA;
+						else
+							packet << DataType::FAILEDDATA;
+					}
+					
+					else if (datatype == DataType::FLOAT)
+					{
+						float val;
+						packet >> val;
+
+						packet.clear();
+
+						packet << PacketType::INIACCESS;
+
+						bool done = inimgr->UpdateDataFloat(user->GetDBConnected(), section, key, val);
+
+						if (done)
+							packet << DataType::SUCCESSDATA;
+						else
+							packet << DataType::FAILEDDATA;
+					}
+					
+					else
+					{
+						packet.clear();
+						packet << PacketType::INIACCESS << DataType::INVALIDDATA;
+					}
+
+					SendPacket(user, packet);
+				}
 			}
+		}
+		
+		else
+		{
+			packet.clear();
+			packet << PacketType::INVALID;
 
+			SendPacket(user, packet);
 		}
 
 		return true;
@@ -311,9 +387,12 @@ public:
 		else if (type == 1) return INIAccessType::INSERT;
 		else if (type == 2) return INIAccessType::DELETE;
 		else if (type == 3) return INIAccessType::FINALIZE;
-		else if (type == 4) return INIAccessType::LOAD;
-		else if (type == 5) return INIAccessType::LOADFAILED;
-		else if (type == 6) return INIAccessType::LOADPASSED;
+		else if (type == 4) return INIAccessType::FINALIZEFAILED;
+		else if (type == 5) return INIAccessType::FINALIZEFAILEDNODATA;
+		else if (type == 6) return INIAccessType::LOAD;
+		else if (type == 7) return INIAccessType::LOADFAILED;
+		else if (type == 8) return INIAccessType::LOADPASSED;
+		else if (type == 9) return INIAccessType::NEWINI;
 		else return INIAccessType::UNDEFINED;
 	}
 

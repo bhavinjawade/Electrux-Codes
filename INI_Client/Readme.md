@@ -1,9 +1,9 @@
 # Electrux-Codes
 
 This is an INI based MySQL like server. (Although not using queries, it uses directly functions.
-This, alongside INI_Server is a hobby project and is in NO way or shape, ready to be even tested correctly.
+This, alongside INI_Server is a hobby project and is now ready to be tested and bug fixed.
 
-Please refrain from using this. But you are free to tweak and learn using it if you desire and even give
+Please refrain from using this in deployment. But you are free to tweak and learn using it if you desire and even give
 feedback and corrections.
 
 Note:

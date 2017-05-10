@@ -69,7 +69,7 @@ namespace Electrux
 		{
 			this->file.open(file, std::ios::in);
 
-			if (!this->file.good()) return false;
+			if (!this->file.is_open()) return false;
 
 			std::string line, tempsection, section, key, val;
 
@@ -128,17 +128,17 @@ namespace Electrux
 
 		std::string GetDataString(std::string sec, std::string key)
 		{
-			return this->datamgr.GetDataString(sec, key);
+			this->datamgr.GetDataString(sec, key);
 		}
 
 		int GetDataInt(std::string sec, std::string key)
 		{
-			return this->datamgr.GetDataInt(sec, key);
+			this->datamgr.GetDataInt(sec, key);
 		}
 
 		float GetDataFloat(std::string sec, std::string key)
 		{
-			return this->datamgr.GetDataFloat(sec, key);
+			this->datamgr.GetDataFloat(sec, key);
 		}
 
 		bool DeleteSection(std::string sec)

@@ -131,7 +131,11 @@ bool SendPacket(User *user, sf::Packet &packet, int max_tries = MAX_PACKET_TRIES
 	while (count < max_tries)
 	{
 		if (user->send(packet) == sf::Socket::Done)
+		{
 			return true;
+		}
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(2));
 
 		++count;
 	}
@@ -154,6 +158,9 @@ bool ReceivePacket(User *user, sf::Packet &packet, int max_tries = MAX_PACKET_TR
 		{
 			return true;
 		}
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(2));
+
 		++count;
 	}
 
@@ -225,6 +232,7 @@ bool AddClient(std::vector<User *> *users, User *user)
 			Logger::Log(MsgCode::NETWORK, "A user with name " + name + " is already connected. Disconnected it successfully.");
 		}
 	}
+	
 	else
 	{
 		//Well, the user is not connected. So connection is successful.

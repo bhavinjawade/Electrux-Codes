@@ -7,6 +7,9 @@ class User : public sf::TcpSocket
 
 	std::string dbconnect;
 
+	bool newdb;
+
+
 public:
 
 	User()
@@ -37,6 +40,16 @@ public:
 	void SetDBConnected(std::string db)
 	{
 		dbconnect = db;
+	}
+
+	bool IsDBNew()
+	{
+		return newdb;
+	}
+
+	void SetNewDB(bool var)
+	{
+		newdb = var;
 	}
 
 };
