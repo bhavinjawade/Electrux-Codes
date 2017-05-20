@@ -11,8 +11,6 @@ int NameExists(std::string name)
 	return 0;
 }
 
-
-
 void SendNameOk(Users *sock)
 {
 	sf::Packet pack;

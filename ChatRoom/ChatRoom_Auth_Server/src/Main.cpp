@@ -16,6 +16,11 @@
 #include "Functions.hpp"
 #include "Remover.hpp"
 
+//Load the SFML network and system libraries and the SQLite library.
+#pragma comment(lib, "sfml-system-d.lib")
+#pragma comment(lib, "sfml-network-d.lib")
+#pragma comment(lib, "SQLite3.lib")
+
 int main()
 {
 	res = udb.Open();
@@ -26,50 +31,43 @@ int main()
 		udb.Close();
 		return 0;
 	}
+
 	udb.CheckDB();
 	udb.SetAllOffline();
+	
 	sf::TcpListener listener;
+	listener.setBlocking(false);
 	listener.listen(8080);
-	sf::SocketSelector selector;
-	selector.add(listener);
+	
 	sf::Packet packet;
 	RemoveHandler remover;
+
 	std::vector<std::thread> threads;
+
 	std::cout << "\nAuthentication server ready to accept connections.";
+
 	while (true)
 	{
-		if (selector.wait())
+			
+		Users* client = new Users;
+		if (listener.accept(*client) == sf::Socket::Done)
 		{
-			if (selector.isReady(listener))
+			packet.clear();
+			threads.push_back(std::thread(AddClientToList, client));
+		}
+		else
+		{
+			delete client;
+		}
+
+		for (std::list<Users*>::iterator receivefrom = clients.begin(); receivefrom != clients.end(); ++receivefrom)
+		{
+			Users& client = **receivefrom;
+			packet.clear();
+			if (client.receive(packet) == sf::Socket::Disconnected)
 			{
-				Users* client = new Users;
-				if (listener.accept(*client) == sf::Socket::Done)
-				{
-					selector.add(*client);
-					packet.clear();
-					threads.push_back(std::thread(AddClientToList, client));
-				}
-				else
-				{
-					delete client;
-				}
-			}
-			else
-			{
-				for (std::list<Users*>::iterator receivefrom = clients.begin(); receivefrom != clients.end(); ++receivefrom)
-				{
-					Users& client = **receivefrom;
-					if (selector.isReady(client))
-					{
-						packet.clear();
-						if (client.receive(packet) == sf::Socket::Disconnected)
-						{
-							remover.AddToRemove(&client);
-							selector.remove(client);
-							continue;
-						}
-					}
-				}
+				remover.AddToRemove(&client);
+				continue;
 			}
 		}
 		remover.UpdateList();

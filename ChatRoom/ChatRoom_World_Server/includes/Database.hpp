@@ -196,16 +196,18 @@ UserDB udb;
 
 class GroupDB
 {
-	std::string dbname;
+
 public:
-	bool CreateGroupDBIfNotExists(std::string &grp, std::string &owner)
+	
+	bool CreateGroupDBIfNotExists(std::string grp, std::string &owner)
 	{
-		dbname = GetDBName(grp);
-		if (!CheckGroupFileExists(dbname))
+		grp = GetDBName(grp);
+
+		if (!CheckGroupFileExists(grp))
 		{
 			sqlite3 *db;
 			sqlite3_stmt *state;
-			sqlite3_open(dbname.c_str(), &db);
+			sqlite3_open(grp.c_str(), &db);
 			std::string str;
 			str = "CREATE TABLE IF NOT EXISTS Users(id INTEGER PRIMARY KEY AUTOINCREMENT, Name VARCHAR(50), IsActive INT(3), AdminLevel INT(3))";
 			sqlite3_prepare_v2(db, str.c_str(), strlen(str.c_str()), &state, NULL);
@@ -218,24 +220,26 @@ public:
 			sqlite3_step(state);
 			sqlite3_finalize(state);
 			sqlite3_close(db);
-			dbname.clear();
 			return true;
 		}
-		dbname.clear();
+		grp.clear();
 		return false;
 	}
-	bool AddGroupMember(std::string &grp, std::string &uname)
+	
+	bool AddGroupMember(std::string grp, std::string &uname)
 	{
 		sqlite3_stmt *state;
 		std::string str;
-		dbname = GetDBName(grp);
+		
+		grp = GetDBName(grp);
+
 		if (!CheckIfExistsInGrp(grp, uname))
 		{
 			sqlite3 *db;
 			str = "INSERT INTO Users(Name, IsActive, AdminLevel) VALUES(\'";
 			str += uname;
 			str += "\',1,0)";
-			sqlite3_open(dbname.c_str(), &db);
+			sqlite3_open(grp.c_str(), &db);
 			sqlite3_prepare_v2(db, str.c_str(), strlen(str.c_str()), &state, NULL);
 			sqlite3_step(state);
 			sqlite3_finalize(state);
@@ -244,16 +248,19 @@ public:
 		}
 		return false;
 	}
-	std::vector<std::string> GetOnlineMembers(std::string &grp)
+	
+	std::vector<std::string> GetOnlineMembers(std::string grp)
 	{
 		sqlite3_stmt *state;
-		dbname = GetDBName(grp);
+
+		grp = GetDBName(grp);
+
 		std::string str, names;
 		std::vector<std::string> tempnames;
 		str = "SELECT * FROM Users";
 		int count = 0, active;
 		sqlite3 *db;
-		sqlite3_open(dbname.c_str(), &db);
+		sqlite3_open(grp.c_str(), &db);
 		sqlite3_prepare_v2(db, str.c_str(), strlen(str.c_str()), &state, NULL);
 		res = sqlite3_step(state);
 		while (res == SQLITE_ROW)
@@ -276,57 +283,42 @@ public:
 			tempnames.clear();
 		return tempnames;
 	}
-	bool DeleteDB(std::string &file)
+	
+	bool DeleteDB(std::string file)
 	{
-		dbname = GetDBName(file);
-		if (!std::remove(dbname.c_str()))
+		file = GetDBName(file);
+
+		if (!std::remove(file.c_str()))
 		{
-			std::cout << "\nSuccess";
 			return true;
 		}
 		else
 		{
-			std::cout << "\nError: " << strerror(errno);
 			return false;
 		}
 		return false;
 	}
-	bool CheckIfExistsInGrp(std::string &grp, std::string &uname)
+	
+	bool CheckIfExistsInGrp(std::string grp, std::string &uname)
 	{
+		int isactive = GetUserIntFromDB(grp, uname, std::string("IsActive"));
 
-		sqlite3_stmt *state;
-		std::string str;
-		str = "SELECT * FROM Users WHERE Name = \'";
-		str += uname;
-		str += "\'";
-		dbname = GetDBName(grp);
-		sqlite3 *db;
-		sqlite3_open(dbname.c_str(), &db);
-		sqlite3_prepare_v2(db, str.c_str(), strlen(str.c_str()), &state, NULL);
-		int res = sqlite3_step(state);
-		sqlite3_finalize(state);
-		sqlite3_close(db);
-		if (res == SQLITE_ROW)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return isactive;
 	}
-	bool RemoveFromGrp(std::string &grp, std::string &uname)
+	
+	bool RemoveFromGrp(std::string grp, std::string &uname)
 	{
 		sqlite3_stmt *state;
 		std::string str;
-		dbname = GetDBName(grp);
+
 		if (CheckIfExistsInGrp(grp, uname))
 		{
 			str = "UPDATE Users SET IsActive = 0, AdminLevel = 0 WHERE Name = \'";
 			str += uname;
 			str += "\'";
 			sqlite3 *db;
-			sqlite3_open(dbname.c_str(), &db);
+			grp = GetDBName(grp);
+			sqlite3_open(grp.c_str(), &db);
 			sqlite3_prepare_v2(db, str.c_str(), strlen(str.c_str()), &state, NULL);
 			sqlite3_step(state);
 			sqlite3_finalize(state);
@@ -336,13 +328,15 @@ public:
 		return false;
 	}
 
-	int UpdateDB(std::string &grp, std::string &uname, std::string &what, int val)
+	int UpdateDB(std::string grp, std::string &uname, std::string &what, int val)
 	{
 		sqlite3_stmt *state;
 		std::string str;
 		char temp[5];
 		_itoa_s(val, temp, 10);
-		dbname = GetDBName(grp);
+		
+		grp = GetDBName(grp);
+
 		if (what.compare("IsActive") == 0)
 		{
 			str = "UPDATE Users SET IsActive = \'";
@@ -360,7 +354,7 @@ public:
 			str += "\'";
 		}
 		sqlite3 *db;
-		sqlite3_open(dbname.c_str(), &db);
+		sqlite3_open(grp.c_str(), &db);
 		sqlite3_prepare_v2(db, str.c_str(), strlen(str.c_str()), &state, NULL);
 		sqlite3_step(state);
 		sqlite3_finalize(state);
@@ -368,28 +362,46 @@ public:
 		return 0;
 	}
 
-	int GetUserIntFromDB(std::string &grp, std::string &uname, std::string &what)
+	int GetUserIntFromDB(std::string grp, std::string &uname, std::string &what)
 	{
-		int ret;
+		int ret = 0;
+
 		sqlite3_stmt *state;
 		std::string str;
+
+		int res;
+
+		grp = GetDBName(grp);
+
+		int col;
+
 		if (what.compare("IsActive") == 0)
 		{
-			str = "SELECT IsActive FROM Users WHERE Name = \'";
+			str = "SELECT * FROM Users WHERE Name = \'";
 			str += uname;
 			str += "\'";
+			
+			col = 2;
 		}
 		if (what.compare("AdminLevel") == 0)
 		{
-			str = "SELECT AdminLevel FROM Users WHERE Name = \'";
+			str = "SELECT * FROM Users WHERE Name = \'";
 			str += uname;
 			str += "\'";
+			
+			col = 3;
 		}
 		sqlite3 *db;
-		sqlite3_open(dbname.c_str(), &db);
+		sqlite3_open(grp.c_str(), &db);
 		sqlite3_prepare_v2(db, str.c_str(), strlen(str.c_str()), &state, NULL);
-		sqlite3_step(state);
-		ret = sqlite3_column_int(state, 0);
+		
+		res = sqlite3_step(state);
+		
+		if (res == SQLITE_ROW)
+		{
+			ret = sqlite3_column_int(state, col);
+		}
+
 		sqlite3_finalize(state);
 		sqlite3_close(db);
 		return ret;
@@ -404,6 +416,7 @@ public:
 		else
 			return false;
 	}
+	
 	std::string GetDBName(std::string &grp)
 	{
 		std::string dbn;

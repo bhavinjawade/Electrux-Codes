@@ -4,22 +4,29 @@ class Network
 	sf::Packet packet;
 	std::string finalmsg, recvmsg;
 	bool auth;
+
 	public:
+
 		bool Init(sf::IpAddress &ip, int &port)
 		{
 			packet.clear();
+			
 			auth = false;
+			
 			int count = 0;
+			
 			while (true)
 			{
 				if (socket.connect(ip, port) == sf::Socket::Done)
 					break;
+
 				if (count > 1000)
 				{
 					return false;
 				}
 				count++;
 			}
+			
 			return true;
 		}
 		void SendMessage(std::string &msg, int type = MSG_TYPE::Text)
@@ -37,7 +44,7 @@ class Network
 		int Authenticate(std::string &name, std::string &pass)
 		{
 			packet.clear();
-			packet << name << pass << sf::IpAddress().getLocalAddress().toString();
+			packet << name << pass << sf::IpAddress().getPublicAddress().toString();
 			int count = 0;
 			if (!SendPacket(packet))
 				return false;
@@ -94,10 +101,12 @@ class Network
 			socket.setBlocking(false);
 			return true;
 		}
+
 		bool IsAuthenticated()
 		{
 			return auth;
 		}
+
 		bool SendPacket(sf::Packet &pkt)
 		{
 			int count = 0;
@@ -113,6 +122,7 @@ class Network
 			}
 			return true;
 		}
+
 		int GetMsg(std::string &recvmsg)
 		{
 			packet.clear();

@@ -45,26 +45,26 @@ class TextHandler:public sf::Drawable
 		{
 			count = 0;
 			temptext.setFont(font);
-			temptext.setColor(sf::Color::White);
+			temptext.setFillColor(sf::Color::White);
 			temptext.setCharacterSize(15);
 
 			typehere.setFont(font);
-			typehere.setColor(sf::Color::White);
+			typehere.setFillColor(sf::Color::White);
 			typehere.setCharacterSize(15);
 			typehere.setPosition((float)10, (float)510);
 
 			typewhat.setFont(font);
-			typewhat.setColor(sf::Color::White);
+			typewhat.setFillColor(sf::Color::White);
 			typewhat.setCharacterSize(15);
 			typewhat.setPosition((float)10, (float)530);
 
 			typewhat2.setFont(font);
-			typewhat2.setColor(sf::Color::White);
+			typewhat2.setFillColor(sf::Color::White);
 			typewhat2.setCharacterSize(15);
 			typewhat2.setPosition((float)10, (float)550);
 
 			counts.setFont(font);
-			counts.setColor(sf::Color::Green);
+			counts.setFillColor(sf::Color::Green);
 			counts.setCharacterSize(15);
 			counts.setPosition((float)10, (float)10);
 

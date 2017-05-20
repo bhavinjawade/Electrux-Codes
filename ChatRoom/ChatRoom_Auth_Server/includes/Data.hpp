@@ -1,2 +1,2 @@
-std::string defaultdbdir = "C:/";
+std::string defaultdbdir = "../../";
 std::mutex clientslock;

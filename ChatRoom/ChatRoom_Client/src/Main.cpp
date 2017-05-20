@@ -14,6 +14,12 @@
 
 std::string windowname = "Chat Room";
 
+//Load the SFML libraries.
+#pragma comment(lib, "sfml-system-d.lib")
+#pragma comment(lib, "sfml-window-d.lib")
+#pragma comment(lib, "sfml-graphics-d.lib")
+#pragma comment(lib, "sfml-network-d.lib")
+
 int main()
 {
 	font.loadFromFile("Assets/Fonts/BOOKOS.TTF");

@@ -15,7 +15,7 @@ class ChatEngine
 			if (!InitNetwork())
 			{
 				connected = false;
-				std::cout << "\nNetwork Failed!";
+				std::cout << "\nNetwork Failed!\n";
 			}
 			else connected = true;
 		}
@@ -55,6 +55,7 @@ class ChatEngine
 		void Update()
 		{
 			int msg = connection.GetMsg(recvtext);
+
 			if (msg != -1)
 			{
 				//std::cout << "\nReceived: " << recvtext;
