@@ -546,9 +546,9 @@ bool xint::isNum(std::string &str)
 {
 	for (auto it = str.begin(); it != str.end(); it++)
 	{
-		if (*it != '0' || *it != '1' || *it != '2' || *it != '3' || *it != '4' || *it != '5' || *it != '6' || *it != '7' || *it != '8' || *it != '9')
+		if (*it != '0' && *it != '1' && *it != '2' && *it != '3' && *it != '4' && *it != '5' && *it != '6' && *it != '7' && *it != '8' && *it != '9')
 		{
-			//return false;
+			return false;
 		}
 	}
 	return true;
