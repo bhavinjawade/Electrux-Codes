@@ -1,11 +1,9 @@
 #include <stdio.h>
-#include <stdlib.h>
 
 #define MAX 10
 
 int main()
 {
-    system("cls");
     int arr[MAX] = {10,20,30,40,50,60,70,80,90,100},
 		beg = 0,
 		end = MAX - 1,
@@ -55,6 +53,6 @@ int main()
     {
         printf("\nElement found in array at %d position.\n", pos);
     }
-    system("pause");
+
     return 0;
 }
