@@ -16,7 +16,8 @@ namespace Electrux
 
 	struct Data
 	{
-		int id;
+		int from_id;
+		int to_id;
 		int weight;
 	};
 

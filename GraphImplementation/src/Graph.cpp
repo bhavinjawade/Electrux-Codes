@@ -2,6 +2,98 @@
 
 namespace Electrux
 {
+
+	bool operator ==(Data one, Data two)
+	{
+		return (one.from_id == two.from_id && one.to_id == two.to_id && one.weight == two.weight);
+	}
+
+	ShortestPathData Graph::CustomGetShortestPath(int src, int dest, std::vector<int> &path, int dist)
+	{
+		if (std::find(path.begin(), path.end(), src) != path.end()) return { -1, path }; //Prevent Cycle lock in graph
+
+		path.push_back(src);
+		NodeList *srclist = GetNodeList(src);
+
+		//std::cout << "New node: " << src << " with dist = " << dist << "\n";
+		//disp_node_tree(path);
+		//std::cout << "\n";
+		//std::cout << "New node end\n\n";
+		ShortestPathData data = { -1, path };
+
+		std::vector<int> origpath = path;
+
+		if (srclist->get_node() == dest)
+		{
+			//std::cout << "final data new = " << dist << " with path = ";
+			//disp_node_tree(path);
+			//std::cout << "\nExiting: " << src << "\n";
+			//std::cout << "\n\n";
+			data.dist = dist;
+			data.path = path;
+
+			return data;
+		}
+
+		Node *it = srclist->getStart();
+		if (it == nullptr)
+		{
+			//std::cout << "No path available on node " << src << ". Returning";
+			//disp_node_tree(data.path);
+			//std::cout << " and dist: " << data.dist << "\n";
+			return data;
+		}
+		data.dist = 0;
+
+		ShortestPathData newdata;
+		int found = 0;
+
+		while (it != nullptr)
+		{
+			if ((newdata = CustomGetShortestPath(it->id, dest, path, dist + it->weight)).dist > 0)
+			{
+				//std::cout << "Received new data: " << newdata.dist << ", prevdata: " << data.dist << "\n";
+				if (data.dist > newdata.dist || data.dist == 0)
+				{
+					std::cout << "Possible Path found... dist = " << newdata.dist << " with path = ";
+					disp_node_tree(newdata.path);
+					std::cout << "\n";
+					data = newdata;
+				}
+				found++;
+			}
+			path = origpath;
+			it = it->next;
+		}
+
+		//std::cout << "Exiting: " << src << " with Found: " << found << " and data.dist = " << data.dist << "\n\n\n";
+
+		if (found <= 0)
+		{
+			data = { -1, path };
+		}
+
+		return data;
+
+	}
+	
+	Data Graph::getSmallestDist(std::vector<Data> data)
+	{
+		Data temp = { -1, -1, -1 };
+
+		temp = *data.begin();
+
+		for (auto it : data)
+		{
+			//std::cout << "Data: " << it.from_id << "\t" << it.to_id << "\t" << it.weight << "\n";
+			if (it.weight < temp.weight)
+				temp = it;
+		}
+		//std::cout << "Mini: " << temp.from_id << "\t" << temp.to_id << "\t" << temp.weight << "\n\n";
+
+		return temp;
+	}
+
 	Graph::Graph()
 	{
 		start = end = nullptr;
@@ -174,112 +266,67 @@ namespace Electrux
 		return allnodes;
 	}
 
-	std::map<int, int> Graph::getShortestDistances(int src, int dest)
+	ShortestPathData Graph::getShortestPath(int src, int dest)
 	{
-		std::map<int, int> dist;
-		std::map<int, bool> visited;
+		std::vector<int> path;
 
-		auto nodes = getNodes();
-		for (auto it = nodes.begin(); it != nodes.end(); ++it)
-		{
-			dist[*it] = 0;
-			visited[*it] = false;
-		}
-		std::vector<mnode> visits;
-		visits.push_back({ src, 0 });
-		dist[src] = 0;
-		while (!visits.empty())
-		{
-			int check = visits.begin()->id;
-			visits.erase(visits.begin());
-			for (auto it = nodes.begin(); it != nodes.end(); ++it)
-			{
-				if (edge_exists(check, *it) > 0)
-				{
-					if (dist[*it] > dist[check] + edge_exists(check, *it) || dist[*it] == 0)
-					{
-						dist[*it] = dist[check] + edge_exists(check, *it);
-					}
-
-					if (!visited[*it])
-					{
-						visited[*it] = true;
-						visits.push_back({ *it, dist[*it] });
-						arrangeVisits(visits);
-					}
-				}
-			}
-		}
-		return dist;
+		return CustomGetShortestPath(src, dest, path);
 	}
 
-	ShortestPathData Graph::CustomGetShortestPath(int src, int dest, std::vector<int> &path, int dist)
+	Graph Graph::generateKruskalGraph()
 	{
-		if (std::find(path.begin(), path.end(), src) != path.end()) return { -1, path }; //Prevent Cycle lock in graph
+		Graph ans;
 
-		path.push_back(src);
-		NodeList *srclist = GetNodeList(src);
+		std::vector<int> tovisit = this->getNodes();
+		int nodecount = tovisit.size();
 
-		//std::cout << "New node: " << src << " with dist = " << dist << "\n";
-		//disp_node_tree(path);
-		//std::cout << "\n";
-		//std::cout << "New node end\n\n";
-		ShortestPathData data = { -1, path };
+		std::vector<Data> visits;
 
-		std::vector<int> origpath = path;
+		int from_node = *tovisit.begin();
 
-		if (srclist->get_node() == dest)
+		std::vector<int> smallestfound;
+
+		while ((int)smallestfound.size() < nodecount)
 		{
-			//std::cout << "final data new = " << dist << " with path = ";
-			//disp_node_tree(path);
-			//std::cout << "\nExiting: " << src << "\n";
-			//std::cout << "\n\n";
-			data.dist = dist;
-			data.path = path;
+			auto nodelist = GetNodeList(from_node);
 
-			return data;
-		}
+			auto node = nodelist->getStart();
 
-		Node *it = srclist->getStart();
-		if (it == nullptr)
-		{
-			//std::cout << "No path available on node " << src << ". Returning";
-			//disp_node_tree(data.path);
-			//std::cout << " and dist: " << data.dist << "\n";
-			return data;
-		}
-		data.dist = 0;
-
-		ShortestPathData newdata;
-		int found = 0;
-
-		while (it != nullptr)
-		{
-			if ((newdata = CustomGetShortestPath(it->id, dest, path, dist + it->weight)).dist > 0)
+			while (node != nullptr)
 			{
-				//std::cout << "Received new data: " << newdata.dist << ", prevdata: " << data.dist << "\n";
-				if (data.dist > newdata.dist || data.dist == 0)
+				if (std::find(tovisit.begin(), tovisit.end(), node->id) != tovisit.end())
 				{
-					std::cout << "Possible Path found... dist = " << newdata.dist << " with path = ";
-					disp_node_tree(newdata.path);
-					std::cout << "\n\n";
-					data = newdata;
+					visits.push_back({ from_node, node->id, node->weight });
 				}
-				found++;
+				node = node->next;
 			}
-			path = origpath;
-			it = it->next;
+
+			auto smallest = this->getSmallestDist(visits);
+
+			auto visitsexists = std::find(visits.begin(), visits.end(), smallest);
+			if(visitsexists != visits.end())
+				visits.erase(visitsexists);
+
+			if (std::find(smallestfound.begin(), smallestfound.end(), smallest.to_id) == smallestfound.end())
+			{
+				ans.add_node(smallest.from_id);
+				ans.add_node(smallest.to_id);
+				ans.add_edge(smallest.from_id, smallest.to_id, smallest.weight);
+
+				if (std::find(smallestfound.begin(), smallestfound.end(), smallest.from_id) == smallestfound.end())
+					smallestfound.push_back(smallest.from_id);
+
+				smallestfound.push_back(smallest.to_id);
+			}
+
+			auto exists = std::find(tovisit.begin(), tovisit.end(), from_node);
+			if(exists != tovisit.end())
+				tovisit.erase(exists);
+
+			from_node = smallest.to_id;
 		}
 
-		//std::cout << "Exiting: " << src << " with Found: " << found << " and data.dist = " << data.dist << "\n\n\n";
-
-		if (found <= 0)
-		{
-			data = { -1, path };
-		}
-
-		return data;
-
+		return ans;
 	}
 
 	void Graph::arrangeVisits(std::vector<mnode> &vec)
@@ -332,4 +379,5 @@ namespace Electrux
 		delete temp;
 		return os;
 	}
+
 }

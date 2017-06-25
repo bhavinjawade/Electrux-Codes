@@ -12,6 +12,10 @@ namespace Electrux
 	{
 		NodeList *start, *end;
 		int directed;
+		
+		ShortestPathData CustomGetShortestPath(int src, int dest, std::vector<int> &path, int dist = 0);
+
+		Data getSmallestDist(std::vector<Data> data);
 
 	public:
 		enum Direction
@@ -31,8 +35,8 @@ namespace Electrux
 		bool NodeListExists(int _base);
 		int edge_exists(int from, int to);
 		std::vector<int> getNodes();
-		std::map<int, int> getShortestDistances(int src, int dest);
-		ShortestPathData CustomGetShortestPath(int src, int dest, std::vector<int> &path, int dist = 0);
+		ShortestPathData getShortestPath(int src, int dest);
+		Graph generateKruskalGraph();
 		void arrangeVisits(std::vector<mnode> &vec);
 		bool findInVector(std::vector<mnode> &vec, int id);
 		friend std::ostream & Graph::operator << (std::ostream &os, const Graph &graph);
