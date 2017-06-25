@@ -25,12 +25,13 @@ int main()
 	jobs.Insert("9", 25, 3);
 
 	
-	jobs.GenerateBestDistribution();
+	int maxprofit = jobs.GenerateBestDistribution();
 
+	jobs.DisplayDistribution();
+	jobs.DisplayJobs();
+	std::cout << "Net Profit: " << maxprofit << "\n\n";
 
 	jobs.Clear();
-
-
 
 	std::system("pause");
 	return 0;

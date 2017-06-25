@@ -248,7 +248,7 @@ public:
 		std::cout << "\n\n**********************************\n\n";
 	}
 
-	void GenerateBestDistribution()
+	int GenerateBestDistribution()
 	{
 		int maxdeadline = this->GetMaxDeadline();
 		
@@ -275,10 +275,7 @@ public:
 
 		this->SortByID();
 
-		//this->DisplayDistribution();
-		this->DisplayJobs();
-
-		std::cout << "Net Profit: " << maxprofit << "\n\n\n\n";
+		return maxprofit;
 	}
 
 };
