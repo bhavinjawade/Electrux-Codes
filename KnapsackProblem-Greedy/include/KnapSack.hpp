@@ -48,11 +48,7 @@ class ItemDB
 			for (size_t j = 0; j < items.size() - i - 1; ++j)
 			{
 				if (items[j].ppuw < items[j + 1].ppuw)
-				{
-					item = items[j];
-					items[j] = items[j + 1];
-					items[j + 1] = item;
-				}
+					this->Swap( j, j + 1 );
 			}
 		}
 
@@ -70,11 +66,7 @@ class ItemDB
 			for (size_t j = 0; j < items.size() - i - 1; ++j)
 			{
 				if (items[j].id > items[j + 1].id)
-				{
-					item = items[j];
-					items[j] = items[j + 1];
-					items[j + 1] = item;
-				}
+					this->Swap( j, j + 1 );
 			}
 		}
 
