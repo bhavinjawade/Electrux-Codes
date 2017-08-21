@@ -49,11 +49,11 @@ int main(int argc, char **argv)
 	std::string finale;
 	if(type == "c" || type == "C")
 	{
-		finale = "gcc" + (flags.empty() ? " " : ( " " + flags + " ")) + "-o " + opfile + " " + file;
+		finale = "clang" + (flags.empty() ? " " : ( " " + flags + " ")) + "-o " + opfile + " " + file;
 	}
 	else
 	{
-		finale = "g++" + (flags.empty() ? " " : ( " " + flags + " ")) + "-o " + opfile + " " + file;
+		finale = "clang++" + (flags.empty() ? " " : ( " " + flags + " ")) + "-o " + opfile + " " + file;
 	}
 
 	std::system(finale.c_str());
