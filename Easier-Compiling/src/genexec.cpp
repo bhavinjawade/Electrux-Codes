@@ -53,7 +53,7 @@ int main(int argc, char **argv)
 	}
 	else
 	{
-		finale = "clang++" + (flags.empty() ? " " : ( " " + flags + " ")) + "-o " + opfile + " " + file;
+		finale = "clang++ -std=c++14" + (flags.empty() ? " " : ( " " + flags + " ")) + "-o " + opfile + " " + file;
 	}
 
 	std::system(finale.c_str());
