@@ -14,6 +14,17 @@ struct String
 	char *str;
 };
 
+
+int net_argv_size( const int argc, const char ** argv )
+{
+	int count = 0;
+	
+	for( int i = 0; i < argc; ++i )
+		count += strlen( argv[ i ] );
+	
+	return count;
+}
+
 char *get_output_file_name( const struct String *src)
 {
 	int loc = 0;

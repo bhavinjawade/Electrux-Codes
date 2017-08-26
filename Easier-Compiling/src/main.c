@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include <memory.h>
+#include <stdlib.h>
 #include "../include/funcs.h"
 
 int main( int argc, char **argv )
@@ -19,12 +19,13 @@ int main( int argc, char **argv )
 	}
 	
 	int is_std_given = is_option_available( argc, ( const char ** )argv, "-std=" );
-	
 	int is_out_obj_given = is_option_available( argc, ( const char ** )argv, "-o" );
 	
 	bool is_src_cpp = is_source_cpp( source_count, sources );
 	
-	char fstr[800];
+	int out_obj_size = ( is_out_obj_given ) ? 0 : ( int )strlen( sources[ 0 ].str ) + 10;
+	
+	char fstr[ net_argv_size( argc, ( const char ** )argv ) + out_obj_size ];
 	
 	if( is_src_cpp )
 	{
@@ -50,10 +51,20 @@ int main( int argc, char **argv )
 	if( !is_out_obj_given )
 	{
 		strcat( fstr, "-o ");
-		strcat( fstr, get_output_file_name( sources ) );
+		
+		// Fetch the pointer to the ouput file name and concatenate it to fstr
+		char *out_file = get_output_file_name( sources );
+		strcat( fstr, out_file );
+		// Free the allocated memory
+		free( out_file );
 	}
 	
-	printf( "%s\n", fstr );
+	//Free the memory allocated to each string in sources, and sources itself
+	for( int i = 0; i < source_count; ++i )
+		free( sources[i].str );
+	free( sources );
+	
+	printf( "Executing: %s\n", fstr );
 	
 	system( fstr );
 	return 0;
