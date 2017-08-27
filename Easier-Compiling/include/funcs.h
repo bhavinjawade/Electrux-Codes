@@ -34,7 +34,7 @@ char *get_output_file_name( const struct String *src)
 			loc = i;
 	}
 	
-	char *name = malloc( ( loc + 1 ) * sizeof( char ) );
+	char *name = ( char * ) malloc( ( loc + 1 ) * sizeof( char ) );
 	
 	strncpy( name, src->str, ( size_t )loc );
 	name[ loc + 1 ] = '\0';
