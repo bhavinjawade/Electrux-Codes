@@ -6,10 +6,10 @@
 #define HASHTABLEIMPLEMENTATION_HASHTABLE_HPP
 
 #include <string>
-#include "table.hpp"
+#include "Table.hpp"
 #include "HashKey.hpp"
 
-const int MAX_TABLES = 1000;
+const int MAX_TABLES = 100000;
 
 namespace Electrux
 {
@@ -22,6 +22,8 @@ namespace Electrux
 		int *lastlocfilled;
 
 		int ctr;
+
+		int netcount;
 
 	public:
 
@@ -36,6 +38,8 @@ namespace Electrux
 
 			for( int i = 0; i < size; ++i )
 				lastlocfilled[ i ] = -1;
+
+			netcount = 0;
 		}
 
 		~HashTable()
@@ -50,8 +54,10 @@ namespace Electrux
 		{
 			int loc = this->Hash( key.GetKey());
 
-			if( lastlocfilled[ loc ] == MAX_TABLES - 1 )
+			if( lastlocfilled[ loc ] == MAX_TABLES - 1 ) {
+				std::cout << "Returned false\n";
 				return false;
+			}
 
 			lastlocfilled[ loc ]++;
 
@@ -63,6 +69,8 @@ namespace Electrux
 			tables[ lastlocfilled[ loc ]]->Insert( loc, val );
 
 			key.SetTable( lastlocfilled[ loc ] );
+
+			netcount++;
 
 			return true;
 		}
@@ -84,6 +92,16 @@ namespace Electrux
 				temp += ( int ) ch;
 
 			return temp % size;
+		}
+
+		int GetCount()
+		{
+			return netcount;
+		}
+
+		int GetCtr()
+		{
+			return ctr;
 		}
 
 	};

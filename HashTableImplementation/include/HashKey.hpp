@@ -16,6 +16,11 @@ namespace Electrux
 
 	public:
 
+		HashKey()
+		{
+			table = -1;
+		}
+
 		HashKey( std::string key )
 		{
 			table = -1;
@@ -40,6 +45,12 @@ namespace Electrux
 		void SetTable( int table )
 		{
 			this->table = table;
+		}
+
+		void operator =( std::string key )
+		{
+			this->table = -1;
+			this->key = key;
 		}
 	};
 }

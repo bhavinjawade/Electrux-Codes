@@ -14,7 +14,6 @@ namespace Electrux
 		// Array of strings which are to be stored.
 		std::string *data;
 		int size;
-		bool *filledloc;
 
 	public:
 
@@ -22,23 +21,20 @@ namespace Electrux
 		{
 			size = datasize;
 			data = new std::string[datasize];
-			filledloc = new bool[datasize];
 		}
 
 		~Table()
 		{
 			delete[] data;
-			delete[] filledloc;
 		}
 
 		bool Insert( int loc, std::string data )
 		{
 			if( loc >= size ) return false;
 
-			if( filledloc[ loc ] ) return false;
+			if( !this->data[ loc ].empty() ) return false;
 
 			this->data[ loc ] = data;
-			filledloc[ loc ] = true;
 
 			return true;
 		}
@@ -46,10 +42,9 @@ namespace Electrux
 		bool Delete( int loc )
 		{
 			if( loc >= size ) return false;
-			if( !filledloc[ loc ] ) return false;
+			if( this->data[ loc ].empty() ) return false;
 
 			data[ loc ].clear();
-			filledloc[ loc ] = false;
 
 			return true;
 		}
