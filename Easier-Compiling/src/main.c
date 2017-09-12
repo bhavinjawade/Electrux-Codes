@@ -55,6 +55,7 @@ int main( int argc, char **argv )
 		// Fetch the pointer to the ouput file name and concatenate it to fstr
 		char *out_file = get_output_file_name( sources );
 		strcat( fstr, out_file );
+
 		// Free the allocated memory
 		free( out_file );
 	}
@@ -64,7 +65,7 @@ int main( int argc, char **argv )
 		free( sources[i].str );
 	free( sources );
 	
-	printf( "Executing: %s\n", fstr );
+	printf( "%s\n", fstr );
 	
 	system( fstr );
 	return 0;
