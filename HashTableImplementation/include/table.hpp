@@ -9,30 +9,36 @@
 
 namespace Electrux
 {
+	template < typename T >
 	class Table
 	{
-		// Array of strings which are to be stored.
-		std::string *data;
+		// Array of datatype ( T ) which are to be stored.
+		T *data;
 		int size;
+		bool *isfilled;
 
 	public:
 
 		Table( int datasize )
 		{
 			size = datasize;
-			data = new std::string[datasize];
+			data = new T[datasize];
+
+			// Defaults to zero.Z
+			isfilled = new bool[ datasize ];
 		}
 
 		~Table()
 		{
 			delete[] data;
+			delete[] isfilled;
 		}
 
-		bool Insert( int loc, std::string data )
+		bool Insert( int loc, T data )
 		{
 			if( loc >= size ) return false;
 
-			if( !this->data[ loc ].empty() ) return false;
+			if( isfilled[ loc ] ) return false;
 
 			this->data[ loc ] = data;
 
@@ -42,16 +48,19 @@ namespace Electrux
 		bool Delete( int loc )
 		{
 			if( loc >= size ) return false;
-			if( this->data[ loc ].empty() ) return false;
+			if( !isfilled[ loc ] ) return false;
 
 			data[ loc ].clear();
 
 			return true;
 		}
 
-		std::string Get( int loc )
+		const T &Get( int loc )
 		{
-			return (loc >= size) ? "" : data[ loc ];
+			if( loc >= size ) return T();
+			if( !isfilled[ loc ] ) return T();
+
+			return data[ loc ];
 		}
 
 	};

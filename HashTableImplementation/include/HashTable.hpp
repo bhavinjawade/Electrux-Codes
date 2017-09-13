@@ -6,18 +6,21 @@
 #define HASHTABLEIMPLEMENTATION_HASHTABLE_HPP
 
 #include <string>
+#include <climits>
+#include "Consts.hpp"
 #include "Table.hpp"
 #include "HashKey.hpp"
-
-const int MAX_TABLES = 100000;
+#include "Stack.hpp"
 
 namespace Electrux
 {
+	template <typename T, typename U >
 	class HashTable
 	{
 		int size;
 
-		Table *tables[MAX_TABLES];
+		Table< U > *tables[MAX_TABLES];
+		Stack *freespaces;
 
 		int *lastlocfilled;
 
@@ -27,14 +30,15 @@ namespace Electrux
 
 	public:
 
-		HashTable( int maxhashtablesize )
+		HashTable()
 		{
 			ctr = 0;
 
-			size = maxhashtablesize;
+			size = TABLE_SIZE;
 
-			tables[ ctr ] = new Table( size );
-			lastlocfilled = new int[size];
+			tables[ ctr ] = new Table< U >( size );
+			lastlocfilled = new int[ size ];
+			freespaces = new Stack[ size ];
 
 			for( int i = 0; i < size; ++i )
 				lastlocfilled[ i ] = -1;
@@ -50,48 +54,61 @@ namespace Electrux
 			delete[] lastlocfilled;
 		}
 
-		bool Insert( HashKey &key, std::string val )
+		bool Insert( HashKey< T > &key, U val )
 		{
-			int loc = this->Hash( key.GetKey());
+			int loc = key();
 
 			if( lastlocfilled[ loc ] == MAX_TABLES - 1 ) {
-				std::cout << "Returned false\n";
 				return false;
 			}
 
-			lastlocfilled[ loc ]++;
-
-			if( lastlocfilled[ loc ] > ctr ) {
-				tables[ lastlocfilled[ loc ]] = new Table( size );
-				ctr++;
+			int freespace = freespaces[ loc ].Pop();
+			if( freespace != INT_MIN )
+			{
+				tables[ freespace ]->Insert( loc, val );
+				key.SetTable( freespace );
 			}
+			else
+			{
+				lastlocfilled[ loc ]++;
 
-			tables[ lastlocfilled[ loc ]]->Insert( loc, val );
+				if( lastlocfilled[ loc ] > ctr ) {
+					tables[ lastlocfilled[ loc ]] = new Table< U >( size );
+					ctr++;
+				}
 
-			key.SetTable( lastlocfilled[ loc ] );
+				tables[ lastlocfilled[ loc ]]->Insert( loc, val );
+
+				key.SetTable( lastlocfilled[ loc ] );
+			}
 
 			netcount++;
 
 			return true;
 		}
 
-		std::string Get( const HashKey &key )
+		bool Delete( HashKey< T > &key )
 		{
-			if( key.GetTable() < 0 ) return "";
+			int loc = key();
 
-			int loc = this->Hash( key.GetKey());
+			if( tables[ key.GetTable() ]->Delete( loc ) ) {
+				netcount--;
+				freespaces[ loc ].Push( key.GetTable() );
+				key.SetTable( -1 );
 
-			return tables[ key.GetTable() ]->Get( loc );
+				return true;
+			}
+
+			return false;
 		}
 
-		int Hash( std::string key )
+		std::string Get( const HashKey< T > &key )
 		{
-			int temp = 0;
+			if( key.GetTable() < 0 ) return T();
 
-			for( auto ch : key )
-				temp += ( int ) ch;
+			int loc = key();
 
-			return temp % size;
+			return tables[ key.GetTable() ]->Get( key() );
 		}
 
 		int GetCount()
