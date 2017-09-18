@@ -7,7 +7,7 @@
 
 #include <string>
 #include <climits>
-#include "Consts.hpp"
+#include "Constants.hpp"
 #include "Table.hpp"
 #include "HashKey.hpp"
 #include "Stack.hpp"

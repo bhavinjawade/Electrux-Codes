@@ -6,7 +6,7 @@
 #define HASHTABLEIMPLEMENTATION_STACK_HPP
 
 #include <climits>
-#include "Consts.hpp"
+#include "Constants.hpp"
 
 namespace Electrux
 {
