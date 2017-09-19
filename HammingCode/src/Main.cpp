@@ -4,7 +4,7 @@
 #include <cmath>
 #include <vector>
 #include <map>
-#include "Hamming.hpp"
+#include "../include/Hamming.hpp"
 
 
 

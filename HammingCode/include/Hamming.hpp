@@ -1,4 +1,7 @@
-#pragma once
+#include <vector>
+#include <map>
+#include <cmath>
+#include <string>
 
 const char parity_char_str[] = "P",
 parity_char = 'P';
@@ -147,7 +150,7 @@ std::map<int, std::vector<int>> HammingCode::getoneplaces(StringWithParityCount 
 	std::map<int, std::string> bins;
 	std::map<int, std::vector<int>> positions;
 
-	for (int i = 1; i <= paritystr.arr.length(); ++i)
+	for (int i = 1; i <= (int)paritystr.arr.length(); ++i)
 	{
 		bins[i] = getrevbin(i, paritystr.pbits);
 	}
