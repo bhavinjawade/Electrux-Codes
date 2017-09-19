@@ -32,7 +32,7 @@ int main( int argc, const char **argv )
 
 
 	// Get extension of language.
-	auto extension = languages.find( language )->second;
+	auto extension = LANGUAGES.find( language )->second;
 
 	// Get directory, if specified, from command line.
 	GetDirFromFlag( args, dirname );

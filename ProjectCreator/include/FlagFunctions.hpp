@@ -11,23 +11,23 @@
 
 bool GetLangFromFlag( const std::vector< std::string > &args, std::string &language )
 {
-	auto langflag = std::find( args.begin(), args.end(), "--language" );
+	auto langflag = std::find( args.begin(), args.end(), Flags::LANG );
 
 	// Language check.
 	if( langflag == args.end() ) {
-		std::cout << "Error: No language flag found. Use --language <lang> flag.\n";
+		std::cout << "Error: No language flag found. Use " + Flags::LANG + " <language> flag.\n";
 		return false;
 	}
 
 
 	auto lang = langflag + 1;
 
-	if( lang == args.end() || ( languages.find( *lang ) == languages.end() ) ) {
-		std::cout << "Error: No (valid) language specified after the --language flag.\n";
+	if( lang == args.end() || lang->find( "--" ) != std::string::npos || LANGUAGES.find( *lang ) == LANGUAGES.end() ) {
+		std::cout << "Error: No (valid) language specified after the " + Flags::LANG + " flag.\n";
 		std::cout << "\tValid languages are:\n";
 
-		for( auto lang : languages )
-			std::cout << "\t\t" << lang.first << "\n";
+		for( auto _lang : LANGUAGES )
+			std::cout << "\t\t" << _lang.first << "\n";
 
 		return false;
 	}
@@ -41,10 +41,10 @@ bool GetLangFromFlag( const std::vector< std::string > &args, std::string &langu
 
 bool GetProjNameFromFlag( const std::vector< std::string > &args, std::string &proj )
 {
-	auto projnameflag = std::find( args.begin(), args.end(), "--name" );
+	auto projnameflag = std::find( args.begin(), args.end(), Flags::PROJNAME );
 
 	if( projnameflag == args.end() ) {
-		std::cout << "Error: No Project Name flag found. Use --name <Project_Name> flag.\n";
+		std::cout << "Error: No Project Name flag found. Use " + Flags::PROJNAME + " <Project_Name> flag.\n";
 		std::cout << "Note that no spaces are allowed in project name.\n";
 		return false;
 	}
@@ -53,7 +53,7 @@ bool GetProjNameFromFlag( const std::vector< std::string > &args, std::string &p
 	auto projname = projnameflag + 1;
 
 	if( projname == args.end() || ( projname->find( "--" ) != std::string::npos ) ) {
-		std::cout << "Error: No project name specified after the --name flag.\n";
+		std::cout << "Error: No project name specified after the " + Flags::PROJNAME + " flag.\n";
 		return false;
 	}
 
@@ -66,10 +66,10 @@ bool GetProjNameFromFlag( const std::vector< std::string > &args, std::string &p
 
 bool GetDirFromFlag( const std::vector< std::string > &args, std::string &dir )
 {
-	auto dirflag = std::find( args.begin(), args.end(), "--dir" );
+	auto dirflag = std::find( args.begin(), args.end(), Flags::DIR );
 
 	if( dirflag == args.end() ) {
-		std::cout << "Note: Since no directory was specified, using current directory to create the project.\n";
+		std::cout << "Note: No custom directory was specified.\n";
 		dir = ".";
 		return false;
 	}
@@ -78,9 +78,10 @@ bool GetDirFromFlag( const std::vector< std::string > &args, std::string &dir )
 	auto dirname = dirflag + 1;
 
 	if( dirname == args.end() || ( dirname->find( "--" ) != std::string::npos ) ) {
-		std::cout << "Error: No directory specified after the --dir flag.\n";
+		std::cout << "Error: No directory specified after the " + Flags::DIR + " flag.\n";
 		return false;
 	}
+
 
 
 	dir = *dirname;
@@ -93,7 +94,7 @@ bool GetDirFromFlag( const std::vector< std::string > &args, std::string &dir )
 
 bool GetLibsFromFlag( const std::vector< std::string > &args, std::vector< std::string > &libs )
 {
-	auto libflag = std::find( args.begin(), args.end(), "--libs" );
+	auto libflag = std::find( args.begin(), args.end(), Flags::LIBS );
 
 	if( libflag == args.end() ) {
 		std::cout << "Note: No library was specified.\n";
@@ -104,7 +105,7 @@ bool GetLibsFromFlag( const std::vector< std::string > &args, std::vector< std::
 	auto dirs = libflag + 1;
 
 	if( dirs == args.end() || ( dirs->find( "--" ) != std::string::npos ) ) {
-		std::cout << "Error: No directory specified after the --dir flag.\n";
+		std::cout << "Error: No directory specified after the " + Flags::LIBS + " flag.\n";
 		return false;
 	}
 
