@@ -32,8 +32,11 @@ void GenCMakeConfig( std::string &project, std::string &projfolder, std::string 
 	std::string cmakemodfolder = projfolder + "/cmake_modules";
 	CreateDir( cmakemodfolder );
 
+
+
 	if( std::find( libs.begin(), libs.end(), "sfml" ) != libs.end() )
 		cmakestr += GetSFMLCMake( project, cmakemodfolder );
+
 
 
 	CreateFileWithContents( projfolder + "/CMakeLists.txt", cmakestr );

@@ -20,7 +20,11 @@ int main( int argc, const char **argv )
 	if( !GetLangFromFlag( args, language )  || !GetProjNameFromFlag( args, projectname ) )
 		return 0;
 
+
 	std::cout << "Generating project " << projectname << "...\n\n";
+
+
+
 	// Get extension of language.
 	auto extension = languages.find( language )->second;
 
@@ -47,6 +51,8 @@ int main( int argc, const char **argv )
 	std::vector< std::string > libs;
 	if( GetLibsFromFlag( args, libs ) )
 		GenCMakeConfig( projectname, projfolder, language, libs );
+
+
 
 	std::cout << "\nGeneration finished!\n";
 

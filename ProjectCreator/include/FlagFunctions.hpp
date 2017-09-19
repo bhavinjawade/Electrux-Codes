@@ -19,6 +19,7 @@ bool GetLangFromFlag( const std::vector< std::string > &args, std::string &langu
 		return false;
 	}
 
+
 	auto lang = langflag + 1;
 
 	if( lang == args.end() || ( languages.find( *lang ) == languages.end() ) ) {
@@ -30,6 +31,8 @@ bool GetLangFromFlag( const std::vector< std::string > &args, std::string &langu
 
 		return false;
 	}
+
+
 
 	language = *lang;
 
@@ -46,12 +49,15 @@ bool GetProjNameFromFlag( const std::vector< std::string > &args, std::string &p
 		return false;
 	}
 
+
 	auto projname = projnameflag + 1;
 
 	if( projname == args.end() || ( projname->find( "--" ) != std::string::npos ) ) {
 		std::cout << "Error: No project name specified after the --name flag.\n";
 		return false;
 	}
+
+
 
 	proj = *projname;
 
@@ -68,12 +74,14 @@ bool GetDirFromFlag( const std::vector< std::string > &args, std::string &dir )
 		return false;
 	}
 
+
 	auto dirname = dirflag + 1;
 
 	if( dirname == args.end() || ( dirname->find( "--" ) != std::string::npos ) ) {
 		std::cout << "Error: No directory specified after the --dir flag.\n";
 		return false;
 	}
+
 
 	dir = *dirname;
 
@@ -92,6 +100,7 @@ bool GetLibsFromFlag( const std::vector< std::string > &args, std::vector< std::
 		return false;
 	}
 
+
 	auto dirs = libflag + 1;
 
 	if( dirs == args.end() || ( dirs->find( "--" ) != std::string::npos ) ) {
@@ -99,16 +108,22 @@ bool GetLibsFromFlag( const std::vector< std::string > &args, std::vector< std::
 		return false;
 	}
 
+
 	std::string temp;
 
 	for( auto ch : *dirs ) {
 		if( ch == ',' ) {
+
 			libs.push_back( temp );
 			temp.clear();
+
 		} else {
+
 			temp.push_back( ch );
+
 		}
 	}
+
 
 	if( !temp.empty() )
 		libs.push_back( temp );

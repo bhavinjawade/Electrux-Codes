@@ -18,7 +18,9 @@ void SetFolderPaths( std::string &directory,
 	// Incase the dirname given by user does not contain '/' at the end...
 	directory = ( *(directory.end() - 1) == '/' ) ? directory : directory + "/";
 
+
 	projfolder      = directory + projectname;
+
 	srcfolder       = projfolder + "/src";
 	includefolder   = projfolder + "/include";
 	buildfolder     = projfolder + "/build";
@@ -27,6 +29,7 @@ void SetFolderPaths( std::string &directory,
 int CreateDir( const std::string &dir )
 {
 	std::cout << "Creating Directory: " << dir << "\n";
+
 	return mkdir( dir.c_str(), 0755 );
 }
 
