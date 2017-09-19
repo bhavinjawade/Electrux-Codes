@@ -7,7 +7,7 @@ for any project which you want to make.
 To use this program, a few command line arguments given below must be
 remembered:
 
-	--language <language code>
+	--lang <language code>
 
 		This argument specifies the language which is to be used to
 		create the project.
