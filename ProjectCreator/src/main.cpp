@@ -12,6 +12,12 @@
 
 int main( int argc, const char **argv )
 {
+	if( argc < 2 ) {
+		std::cout << "Syntax: " << argv[ 0 ] << " --<flag> <value> ...\n";
+		return 0;
+	}
+
+
 	auto args = ConvertToVector( argc, argv );
 
 	std::string language, projectname, dirname;
