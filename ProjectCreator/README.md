@@ -37,11 +37,20 @@ remembered:
 		automatically set the path relative to current directory.
 
 
-	--libs <comma separated libraries>
+	--libs <comma separated library codes>
 
 		This argument specifies the libraries which are to be used
-		with the project. Currently, only supports SFML.
+		with the project. Currently supports:
+			SFML,
+			SDL2 ( with SDL2_image, SDL2_ttf as optionals ).
 
+		To use the libs, use the following:
+
+			Library		Code
+			SFML		sfml
+			SDL2		sdl2
+			SDL2_image	sdl2img
+			SDL2_ttf	sdl2ttf
 
 		NOTE: You must have installed the library on your system
 			beforehand.
@@ -49,4 +58,4 @@ remembered:
 
 
 Final example:
-	./ProjectCreator --language c++ --name Test --dir ~ --libs sfml
+	./ProjectCreator --language c++ --name Test --dir ~ --libs sdl2,sdl2img

@@ -8,9 +8,14 @@
 #include <map>
 #include <string>
 
-const std::map< std::string, std::string > LANGUAGES = {
+static std::map< std::string, std::string > LANGUAGEEXTS = {
 	{ "c", "c" },
 	{ "c++" , "cpp" }
+};
+
+static std::map< std::string, std::string > DEFAULT_INCLUDES = {
+	{ "c", "#include <stdio.h>\n\n" },
+	{ "c++", "#include <iostream>\n\n" }
 };
 
 const std::string CMAKE_MIN = "3.2";

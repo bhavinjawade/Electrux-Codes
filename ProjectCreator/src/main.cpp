@@ -9,6 +9,7 @@
 #include "../include/FlagFunctions.hpp"
 #include "../include/CMakeGenerator.hpp"
 #include "../include/DirFileFunctions.hpp"
+#include "../include/DefaultMain.hpp"
 
 int main( int argc, const char **argv )
 {
@@ -32,7 +33,7 @@ int main( int argc, const char **argv )
 
 
 	// Get extension of language.
-	auto extension = LANGUAGES.find( language )->second;
+	auto extension = LANGUAGEEXTS[ language ];
 
 	// Get directory, if specified, from command line.
 	GetDirFromFlag( args, dirname );
@@ -52,7 +53,8 @@ int main( int argc, const char **argv )
 	CreateDir( buildfolder );
 
 
-	CreateFileWithContents( srcfolder + "/main." + extension );
+	std::string maincontents = DEFAULT_INCLUDES[ language ] + DEFAULTMAIN;
+	CreateFileWithContents( srcfolder + "/main." + extension, maincontents );
 
 	std::vector< std::string > libs;
 	if( GetLibsFromFlag( args, libs ) )

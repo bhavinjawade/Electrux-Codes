@@ -22,11 +22,11 @@ bool GetLangFromFlag( const std::vector< std::string > &args, std::string &langu
 
 	auto lang = langflag + 1;
 
-	if( lang == args.end() || lang->find( "--" ) != std::string::npos || LANGUAGES.find( *lang ) == LANGUAGES.end() ) {
+	if( lang == args.end() || lang->find( "--" ) != std::string::npos || LANGUAGEEXTS.find( *lang ) == LANGUAGEEXTS.end() ) {
 		std::cout << "Error: No (valid) language specified after the " + Flags::LANG + " flag.\n";
 		std::cout << "\tValid languages are:\n";
 
-		for( auto _lang : LANGUAGES )
+		for( auto _lang : LANGUAGEEXTS )
 			std::cout << "\t\t" << _lang.first << "\n";
 
 		return false;

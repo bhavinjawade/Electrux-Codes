@@ -24,7 +24,7 @@ std::string SetupSFML( const std::string &lang, const std::string &cmakemodfolde
 
 void GenCMakeConfig( std::string &project, std::string &projfolder, std::string &lang, std::vector< std::string > &libs )
 {
-	std::string srcfile = "main." + LANGUAGES.find( lang )->second;
+	std::string srcfile = "main." + LANGUAGEEXTS[ lang ];
 	std::string standard = ( lang == "c" ) ? "set(CMAKE_C_STANDARD 11)\n" : "set(CMAKE_CXX_STANDARD 14)\n";
 
 	std::string cmakestr =
@@ -75,6 +75,7 @@ std::string SetupSDL2( const std::string &lang, const std::string &cmakemodfolde
 	std::string includesdl2_ttf = ( withsdl2_ttf ) ? " ${SDL2_TTF_INCLUDE_DIR}" : "";
 	std::string linksdl2_ttf = ( withsdl2_ttf ) ? " ${SDL2_TTF_LIBRARY}" : "";
 
+
 	if( lang != "c++" && lang != "c" ) {
 		std::cout << "WARNING: Cannot include SDL2 since it is a C/C++ library.\n";
 	}
@@ -94,7 +95,7 @@ std::string SetupSDL2( const std::string &lang, const std::string &cmakemodfolde
 		if( withsdl2_ttf )
 			CreateFileWithContents( cmakemodfolder + "/FindSDL2_ttf.cmake", FINDSDL2_TTFFILESTR );
 
-		CreateFileWithContents( cmakemodfolder + "/../src/main." + LANGUAGES.find( lang )->second, SDL2DEFAULTMAIN );
+		CreateFileWithContents( cmakemodfolder + "/../src/main." + LANGUAGEEXTS[ lang ], SDL2DEFAULTMAIN[ lang ] );
 	}
 
 	return sdlstr;
