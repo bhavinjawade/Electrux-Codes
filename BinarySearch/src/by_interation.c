@@ -18,9 +18,7 @@ int main()
 	while (beg <= end)
 	{
 		for(int i = beg; i <= end; i++)
-		{
 			printf("%d\t", arr[i]);
-		}
 
 		printf("\n");
 
@@ -32,26 +30,18 @@ int main()
 		else
 		{
 			if(data < arr[mid])
-			{
 				end = mid - 1;
-			}
 			else
-			{
 				beg = mid + 1;
-			}
 		}
 
 		mid = (beg+end)/2;
 	}
 
 	if(pos == -1)
-	{
 		printf("\nElement not found in the array.");
-	}
 	else
-	{
 		printf("\nElement found in array at %d position.\n", pos);
-	}
 
 	return 0;
 }
