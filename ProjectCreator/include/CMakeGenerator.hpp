@@ -118,7 +118,7 @@ std::string SetupSFML( const std::string &lang, const std::string &projfolder )
 
 		CreateFileWithContents( projfolder + CMAKEMODPATH + "/FindSFML.cmake", FINDSFMLFILESTR );
 		// Create a default main file for SFML.
-		CreateFileWithContents( projfolder + CMAKEMODPATH + "/src/main.cpp", SFMLDEFAULTMAIN );
+		CreateFileWithContents( projfolder + "/src/main.cpp", SFMLDEFAULTMAIN );
 	}
 	return sfmlstr;
 }
