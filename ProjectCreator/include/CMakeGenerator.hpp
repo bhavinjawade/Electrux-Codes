@@ -10,6 +10,7 @@
 #include <string>
 #include <sys/stat.h>
 #include <fstream>
+#include "Data.hpp"
 #include "FindSFML.hpp"
 #include "DirFileFunctions.hpp"
 #include "FindSDL2.hpp"
@@ -18,9 +19,10 @@
 #include "SFMLDefaultMain.hpp"
 #include "SDL2DefaultMain.hpp"
 
+const std::string CMAKEMODPATH = "/cmake_modules";
 
-std::string SetupSDL2( const std::string &lang, const std::string &cmakemodfolder, bool withsdl2_image = false, bool withsdl2_ttf = false );
-std::string SetupSFML( const std::string &lang, const std::string &cmakemodfolder );
+std::string SetupSDL2( const std::string &lang, const std::string &projfolder, bool withsdl2_image = false, bool withsdl2_ttf = false );
+std::string SetupSFML( const std::string &lang, const std::string &projfolder );
 
 void GenCMakeConfig( std::string &project, std::string &projfolder, std::string &lang, std::vector< std::string > &libs )
 {
@@ -39,7 +41,7 @@ void GenCMakeConfig( std::string &project, std::string &projfolder, std::string 
 			"add_executable(" + project + " ${SOURCE_FILES})\n"
 			"\n";
 
-	std::string cmakemodfolder = projfolder + "/cmake_modules";
+	std::string cmakemodfolder = projfolder + CMAKEMODPATH;
 	CreateDir( cmakemodfolder );
 
 
@@ -50,12 +52,11 @@ void GenCMakeConfig( std::string &project, std::string &projfolder, std::string 
 		bool usesdl2_image = ( std::find( libs.begin(), libs.end(), "sdl2img" ) != libs.end() );
 		bool usesdl2_ttf = ( std::find( libs.begin(), libs.end(), "sdl2ttf" ) != libs.end() );
 
-		cmakestr += SetupSDL2( lang, cmakemodfolder, usesdl2_image, usesdl2_ttf );
+		cmakestr += SetupSDL2( lang, projfolder, usesdl2_image, usesdl2_ttf );
 
-	}
-	else if( std::find( libs.begin(), libs.end(), "sfml" ) != libs.end() ) {
+	} else if( std::find( libs.begin(), libs.end(), "sfml" ) != libs.end() ) {
 
-		cmakestr += SetupSFML( lang, cmakemodfolder );
+		cmakestr += SetupSFML( lang, projfolder );
 
 	}
 
@@ -63,7 +64,7 @@ void GenCMakeConfig( std::string &project, std::string &projfolder, std::string 
 }
 
 
-std::string SetupSDL2( const std::string &lang, const std::string &cmakemodfolder, bool withsdl2_image, bool withsdl2_ttf )
+std::string SetupSDL2( const std::string &lang, const std::string &projfolder, bool withsdl2_image, bool withsdl2_ttf )
 {
 	std::string sdlstr;
 
@@ -87,21 +88,21 @@ std::string SetupSDL2( const std::string &lang, const std::string &cmakemodfolde
 			"include_directories(${SDL2_INCLUDE_DIR}" + includesdl2_image + includesdl2_ttf + ")\n"
 			"target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY}" + linksdl2_image + linksdl2_ttf + ")\n";
 
-		CreateFileWithContents( cmakemodfolder + "/FindSDL2.cmake", FINDSDL2FILESTR );
+		CreateFileWithContents( projfolder + CMAKEMODPATH + "/FindSDL2.cmake", FINDSDL2FILESTR );
 
 		if( withsdl2_image )
-			CreateFileWithContents( cmakemodfolder + "/FindSDL2_image.cmake", FINDSDL2_IMAGEFILESTR );
+			CreateFileWithContents( projfolder + CMAKEMODPATH + "/FindSDL2_image.cmake", FINDSDL2_IMAGEFILESTR );
 
 		if( withsdl2_ttf )
-			CreateFileWithContents( cmakemodfolder + "/FindSDL2_ttf.cmake", FINDSDL2_TTFFILESTR );
+			CreateFileWithContents( projfolder + CMAKEMODPATH + "/FindSDL2_ttf.cmake", FINDSDL2_TTFFILESTR );
 
-		CreateFileWithContents( cmakemodfolder + "/../src/main." + LANGUAGEEXTS[ lang ], SDL2DEFAULTMAIN[ lang ] );
+		CreateFileWithContents( projfolder + "/src/main." + LANGUAGEEXTS[ lang ], SDL2DEFAULTMAIN[ lang ] );
 	}
 
 	return sdlstr;
 }
 
-std::string SetupSFML( const std::string &lang, const std::string &cmakemodfolder )
+std::string SetupSFML( const std::string &lang, const std::string &projfolder )
 {
 	std::string sfmlstr;
 	if( lang != "c++" ) {
@@ -115,9 +116,9 @@ std::string SetupSFML( const std::string &lang, const std::string &cmakemodfolde
 			"    target_link_libraries(${PROJECT_NAME} ${SFML_LIBRARIES})\n"
 			"endif()\n";
 
-		CreateFileWithContents( cmakemodfolder + "/FindSFML.cmake", FINDSFMLFILESTR );
+		CreateFileWithContents( projfolder + CMAKEMODPATH + "/FindSFML.cmake", FINDSFMLFILESTR );
 		// Create a default main file for SFML.
-		CreateFileWithContents( cmakemodfolder + "/../src/main.cpp", SFMLDEFAULTMAIN );
+		CreateFileWithContents( projfolder + CMAKEMODPATH + "/src/main.cpp", SFMLDEFAULTMAIN );
 	}
 	return sfmlstr;
 }
