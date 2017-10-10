@@ -9,6 +9,23 @@
 #include <vector>
 #include "Data.hpp"
 
+bool ShowHelpIfNeeded( const std::vector< std::string > &args )
+{
+	auto helpflag = std::find( args.begin(), args.end(), Flags::HELP );
+
+	if( helpflag == args.end() ) return false;
+
+	std::cout << "Usage:\n";
+	std::cout << "\t--lang <Language>\t\tSet the language for the project\n";
+	std::cout << "\t--name <Name>\t\tName of the project\n";
+	std::cout << "\t--dir  <Directory>\t\tDirectory for the project\n";
+	std::cout << "\t--libs <Libraries>\t\tComma separated list of libraries to include in the project\n";
+	std::cout << "\n\t\tExample: " << args[ 0 ] << " --lang c++ --name test --dir ~ --libs sdl\n";
+	std::cout << "\nEnd\n\n";
+
+	return true;
+}
+
 bool GetLangFromFlag( const std::vector< std::string > &args, std::string &language )
 {
 	auto langflag = std::find( args.begin(), args.end(), Flags::LANG );

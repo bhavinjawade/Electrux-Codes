@@ -23,12 +23,14 @@ const std::string CMAKE_MIN = "3.2";
 class Flags
 {
 public:
-	static const std::string LANG,
+	static const std::string HELP,
+		LANG,
 		DIR,
 		PROJNAME,
 		LIBS;
 };
 
+const std::string Flags::HELP     = "--help";
 const std::string Flags::LANG     = "--lang";
 const std::string Flags::DIR      = "--dir";
 const std::string Flags::PROJNAME = "--name";

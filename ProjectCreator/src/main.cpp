@@ -21,6 +21,10 @@ int main( int argc, const char **argv )
 
 	auto args = ConvertToVector( argc, argv );
 
+	// If the user requests for help, show it and quit.
+	if( ShowHelpIfNeeded( args ) )
+		return 0;
+	
 	std::string language, projectname, dirname;
 
 	// If there is no language specified, or no project name given, exit.
@@ -57,8 +61,9 @@ int main( int argc, const char **argv )
 	CreateFileWithContents( srcfolder + "/main." + extension, maincontents );
 
 	std::vector< std::string > libs;
-	if( GetLibsFromFlag( args, libs ) )
-		GenCMakeConfig( projectname, projfolder, language, libs );
+	GetLibsFromFlag( args, libs );
+
+	GenCMakeConfig( projectname, projfolder, language, libs );
 
 
 
